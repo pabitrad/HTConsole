@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="HTBackup">
+    <EntitySetMapping Name="SCHEDULERs">
+      <EntityTypeMapping TypeName="Model.SCHEDULER">
+        <MappingFragment StoreEntitySet="SCHEDULER">
+          <ScalarProperty Name="SERVERNAME" ColumnName="SERVERNAME" />
+          <ScalarProperty Name="USER" ColumnName="USER" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="ESSUSER" ColumnName="ESSUSER" />
+          <ScalarProperty Name="ESSPASSWORD" ColumnName="ESSPASSWORD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
