@@ -70,9 +70,6 @@
     <Compile Include="..\HTBackupConsole\BackupJob.cs">
       <Link>BackupJob.cs</Link>
     </Compile>
-    <Compile Include="..\HTBackupConsole\BackupJobScheduler.cs">
-      <Link>BackupJobScheduler.cs</Link>
-    </Compile>
     <Compile Include="..\HTBackupConsole\HTConsoleHelper.cs">
       <Link>HTConsoleHelper.cs</Link>
     </Compile>

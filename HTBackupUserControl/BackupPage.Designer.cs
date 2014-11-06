@@ -41,11 +41,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownBackupIncremental = new System.Windows.Forms.NumericUpDown();
             this.btnReset = new System.Windows.Forms.Button();
-            this.cmbBoxServer = new System.Windows.Forms.ComboBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.listBoxJobs = new System.Windows.Forms.ListView();
             this.jobName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.backupType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxJobDetails = new System.Windows.Forms.GroupBox();
             this.btnDeleteTrigger = new System.Windows.Forms.Button();
             this.btnEditTrigger = new System.Windows.Forms.Button();
@@ -197,35 +195,25 @@
             // btnReset
             // 
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.Location = new System.Drawing.Point(436, 330);
+            this.btnReset.Location = new System.Drawing.Point(460, 330);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 43;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
-            // 
-            // cmbBoxServer
-            // 
-            this.cmbBoxServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxServer.FormattingEnabled = true;
-            this.cmbBoxServer.Location = new System.Drawing.Point(6, 16);
-            this.cmbBoxServer.Name = "cmbBoxServer";
-            this.cmbBoxServer.Size = new System.Drawing.Size(150, 21);
-            this.cmbBoxServer.TabIndex = 56;
-            this.cmbBoxServer.SelectedIndexChanged += new System.EventHandler(this.cmbBoxServer_SelectedIndexChanged);
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // listBoxJobs
             // 
             this.listBoxJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.jobName,
-            this.backupType});
+            this.jobName});
             this.listBoxJobs.FullRowSelect = true;
             this.listBoxJobs.HideSelection = false;
-            this.listBoxJobs.Location = new System.Drawing.Point(6, 43);
+            this.listBoxJobs.Location = new System.Drawing.Point(6, 24);
             this.listBoxJobs.MultiSelect = false;
             this.listBoxJobs.Name = "listBoxJobs";
             this.listBoxJobs.ShowGroups = false;
-            this.listBoxJobs.Size = new System.Drawing.Size(261, 271);
+            this.listBoxJobs.Size = new System.Drawing.Size(261, 290);
             this.listBoxJobs.TabIndex = 57;
             this.listBoxJobs.UseCompatibleStateImageBehavior = false;
             this.listBoxJobs.View = System.Windows.Forms.View.Details;
@@ -234,12 +222,7 @@
             // jobName
             // 
             this.jobName.Text = "Job Name";
-            this.jobName.Width = 175;
-            // 
-            // backupType
-            // 
-            this.backupType.Text = "Backup Type";
-            this.backupType.Width = 78;
+            this.jobName.Width = 250;
             // 
             // groupBoxJobDetails
             // 
@@ -411,7 +394,6 @@
             this.Controls.Add(this.btnDeleteJob);
             this.Controls.Add(this.groupBoxJobDetails);
             this.Controls.Add(this.listBoxJobs);
-            this.Controls.Add(this.cmbBoxServer);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Name = "BackupPage";
             this.Size = new System.Drawing.Size(925, 396);
@@ -440,11 +422,9 @@
         private System.Windows.Forms.GroupBox grpBoxIncremental;
         private System.Windows.Forms.NumericUpDown numericUpDownBackupIncremental;
         private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.ComboBox cmbBoxServer;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ListView listBoxJobs;
         private System.Windows.Forms.ColumnHeader jobName;
-        private System.Windows.Forms.ColumnHeader backupType;
         private System.Windows.Forms.GroupBox groupBoxJobDetails;
         private System.Windows.Forms.Label lblLogFileLocation;
         private System.Windows.Forms.Button btnBrowseBackupLocation;

@@ -20,7 +20,7 @@ namespace HTBackupUserControl
     {
         ServerBackupType _serverBackupType = ServerBackupType.ServerBackup;
         JOBTYPE _jobType = JOBTYPE.FULLBACKUP;
-        ArrayList _backupJobs = null;
+        string _selectedServer = string.Empty;
 
         public BackupPage()
         {
@@ -43,18 +43,11 @@ namespace HTBackupUserControl
             }
         }
 
-        public void setRunningJobs(ArrayList runningJobs)
+        public void setSelectedServer(string server)
         {
-            _backupJobs = runningJobs;
-        }
+            _selectedServer = server.Trim();
 
-        private void initializeControls()
-        {
-            List<string> listServers = HTConsoleHelper.getServers();
-            if (listServers.Count > 0)
-            {
-                cmbBoxServer.DataSource = listServers;
-            }
+            populateJobListview();
         }
 
         private void btnBrowseBackupLocation_Click(object sender, EventArgs e)
@@ -111,12 +104,6 @@ namespace HTBackupUserControl
 
         private bool isValidate()
         {
-            if (cmbBoxServer.SelectedIndex == 0)
-            {
-                MessageBox.Show("Select a server from drop down list.");
-                return false;
-            }
-
             if (string.IsNullOrWhiteSpace(txtJobName.Text))
             {
                 MessageBox.Show("Job Name can not be empty.");
@@ -198,8 +185,6 @@ namespace HTBackupUserControl
 
         private void modifyJob()
         {
-            string selectedNode = cmbBoxServer.Text;
-
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
@@ -214,7 +199,7 @@ namespace HTBackupUserControl
             sqlCommand.Connection.Open();
 
             sqlCommand.Parameters.AddWithValue("@JobName", txtJobName.Text);
-            sqlCommand.Parameters.AddWithValue("@NodeName", selectedNode);
+            sqlCommand.Parameters.AddWithValue("@NodeName", _selectedServer);
             sqlCommand.Parameters.AddWithValue("@BackupType", _jobType);
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
@@ -224,13 +209,22 @@ namespace HTBackupUserControl
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
                 modifyTask();
+
+                BackupJob job = getSelectedJob();
+                if (job != null)
+                {
+                    job.LogFileLocation = logFileLocation;
+                    job.BackupLocation = backupLocation;
+                    job.SourceLocations = HTConsoleHelper.getSourceLocations(sourceLocations);
+                    job.IncrementInterval = incrementalInterval;
+                    job.JobType = _jobType;
+                }
                 MessageBox.Show("Job updated successfully.");
             }
         }
 
         private void insertJob()
         {
-            string selectedNode = cmbBoxServer.Text;
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
@@ -244,7 +238,7 @@ namespace HTBackupUserControl
             sqlCommand.Connection.Open();
 
             sqlCommand.Parameters.AddWithValue("@Name", txtJobName.Text);
-            sqlCommand.Parameters.AddWithValue("@Server", selectedNode);
+            sqlCommand.Parameters.AddWithValue("@Server", _selectedServer);
             sqlCommand.Parameters.AddWithValue("@BackupType", _jobType);
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
@@ -268,7 +262,7 @@ namespace HTBackupUserControl
             List<Trigger> triggers = getTriggers();
             List<Microsoft.Win32.TaskScheduler.Action> actions = getActions(job);
             
-            string taskName = cmbBoxServer.Text.Trim() + "-" + txtJobName.Text.Trim();
+            string taskName = _selectedServer + "-" + txtJobName.Text.Trim();
 
             TaskManager.createTask(taskName, triggers, actions);
         }
@@ -278,7 +272,7 @@ namespace HTBackupUserControl
             List<Trigger> triggers = getTriggers();
             List<Microsoft.Win32.TaskScheduler.Action> actions = getActions(getSelectedJob());
 
-            string taskName = cmbBoxServer.Text.Trim() + "-" + txtJobName.Text.Trim();
+            string taskName = _selectedServer + "-" + txtJobName.Text.Trim();
 
             TaskManager.modifyTask(taskName, triggers, actions);
         }
@@ -311,9 +305,9 @@ namespace HTBackupUserControl
 
         private BackupJob getSelectedJob()
         {
-            if (listBoxJobs.SelectedItems != null && listBoxJobs.SelectedItems.Count > 0)
+            ListViewItem selectedItem = listBoxJobs.FindItemWithText(txtJobName.Text.Trim());
+            if (selectedItem != null)
             {
-                ListViewItem selectedItem = listBoxJobs.SelectedItems[0];
                 BackupJob job = selectedItem.Tag as BackupJob;
 
                 return job;
@@ -328,7 +322,7 @@ namespace HTBackupUserControl
             listitem.SubItems.Add(HTConsoleHelper.getJobType(_jobType));
 
             listitem = listBoxJobs.Items.Add(listitem);
-            BackupJob job = HTConsoleHelper.getSelectedJob(cmbBoxServer.Text.Trim(), txtJobName.Text.Trim());
+            BackupJob job = HTConsoleHelper.getSelectedJob(_selectedServer, txtJobName.Text.Trim());
             if (job != null)
             {
                 listitem.Tag = job;
@@ -365,56 +359,53 @@ namespace HTBackupUserControl
 
         private void reset()
         {
-            //TODO:During edit mode reset it previous values
-            txtJobName.Text = string.Empty;
-            chkBoxIncremental.Checked = false;
-            numericUpDownBackupIncremental.Value = 30;
-            txtboxLogFileLocation.Text = string.Empty;
-            txtboxBackupLocation.Text = string.Empty;
-            listboxSourceLocations.Items.Clear();
-            listViewTriggers.Items.Clear();
+            BackupJob job = getSelectedJob();
+            if (job != null)
+            {
+                txtJobName.Text = job.Name;
+                chkBoxIncremental.Checked = (job.JobType == JOBTYPE.INCREMENTAL);
+                numericUpDownBackupIncremental.Value = job.IncrementInterval;
+                txtboxLogFileLocation.Text = job.LogFileLocation;
+                txtboxBackupLocation.Text = job.BackupLocation;
+                listboxSourceLocations.Items.Clear();
+                listboxSourceLocations.Items.AddRange(job.SourceLocations.ToArray());
+                readTriggers(job);
+            }
+            else
+            {
+                txtJobName.Text = string.Empty;
+                chkBoxIncremental.Checked = false;
+                numericUpDownBackupIncremental.Value = 30;
+                txtboxLogFileLocation.Text = string.Empty;
+                txtboxBackupLocation.Text = string.Empty;
+                listboxSourceLocations.Items.Clear();
+                listViewTriggers.Items.Clear();
+            }
         }
 
         private void BackupPage_Load(object sender, EventArgs e)
         {
-            initializeControls();
         }
 
         private void populateJobListview()
         {
-            if (string.IsNullOrEmpty(cmbBoxServer.Text) == false)
+            if (string.IsNullOrEmpty(_selectedServer) == false)
             {
                 listBoxJobs.Items.Clear();
                 SqlCeCommand cmd = new SqlCeCommand("SELECT Name, BackupType FROM ScheduleJob WHERE Server = @SERVERNAME  AND ServerBackupType = @SERVERBACKUPTYPE");
                 SqlCeConnection sqlConnection = new SqlCeConnection(ConfigurationManager.ConnectionStrings["HTConsoleConnectionString"].ToString());
                 cmd.Connection = sqlConnection;
                 sqlConnection.Open();
-                cmd.Parameters.AddWithValue("@SERVERNAME", cmbBoxServer.Text);
+                cmd.Parameters.AddWithValue("@SERVERNAME", _selectedServer);
                 cmd.Parameters.AddWithValue("@SERVERBACKUPTYPE", _serverBackupType);
 
                 SqlCeDataReader dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
                     ListViewItem listitem = new ListViewItem(dr["Name"].ToString());
-                    listitem.SubItems.Add(HTConsoleHelper.getJobType((JOBTYPE)dr["BackupType"]));
 
                     listBoxJobs.Items.Add(listitem);
                 }
-            }
-        }
-
-        private void cmbBoxServer_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (cmbBoxServer.SelectedIndex > 0)
-                {
-                    populateJobListview();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -443,21 +434,14 @@ namespace HTBackupUserControl
             {
                 if (listBoxJobs.SelectedIndices != null && listBoxJobs.SelectedIndices.Count > 0)
                 {
-                    string serverName = cmbBoxServer.Text;
                     int selectedIndex = listBoxJobs.SelectedIndices[0];
                     ListViewItem item = listBoxJobs.Items[selectedIndex];
                     string jobName = item.SubItems[0].Text;
 
-                    if (isJobRunning(serverName, jobName))
-                    {
-                        MessageBox.Show("The selected job can not be deleted because it is already running or already scheduled to start.");
-                        return;
-                    }
-
                     if (MessageBox.Show("Would you like to delete selected backup job?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         SqlCeCommand cmd = new SqlCeCommand("DELETE FROM ScheduleJob WHERE Server = @Servername AND Name = @JobName");
-                        cmd.Parameters.AddWithValue("@ServerName", serverName);
+                        cmd.Parameters.AddWithValue("@ServerName", _selectedServer);
                         cmd.Parameters.AddWithValue("@JobName", jobName);
 
                         SqlCeConnection sqlConnection = new SqlCeConnection(ConfigurationManager.ConnectionStrings["HTConsoleConnectionString"].ToString());
@@ -467,7 +451,7 @@ namespace HTBackupUserControl
                         if (cmd.ExecuteNonQuery() > 0)
                         {
                             listBoxJobs.Items.RemoveAt(selectedIndex);
-                            TaskManager.deleteTask(serverName + "-" + jobName);
+                            TaskManager.deleteTask(_selectedServer + "-" + jobName);
 
                             createBlankJob();
                         }
@@ -502,9 +486,8 @@ namespace HTBackupUserControl
                     if (item.Tag == null)
                     {
                         string jobName = item.SubItems[0].Text;
-                        string serverName = cmbBoxServer.Text;
 
-                        job = HTConsoleHelper.getSelectedJob(serverName, jobName);
+                        job = HTConsoleHelper.getSelectedJob(_selectedServer, jobName);
                         if (job != null)
                         {
                             item.Tag = job;
@@ -517,18 +500,13 @@ namespace HTBackupUserControl
                     setJobDetails(job);
                     readTriggers(job);
 
-                    groupBoxJobDetails.Enabled =  !(isJobRunning(job.Server, job.Name)); // Disable the tab if job is already running or scheduled to start.
+                    //groupBoxJobDetails.Enabled =  !(isJobRunning(job.Server, job.Name)); // Disable the tab if job is already running or scheduled to start.
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        private bool isJobRunning(string serverName, string jobName)
-        {
-            return _backupJobs != null && _backupJobs.Contains(serverName + "-" + jobName);
         }
 
         private void setJobDetails(BackupJob job)
@@ -568,7 +546,6 @@ namespace HTBackupUserControl
                 if (triggerDlg.ShowDialog() == DialogResult.OK)
                 {
                     Trigger trigger = triggerDlg.Trigger;
-                    trigger.Enabled = false;
                     addTriggerToList(trigger);
                 }
                 Cursor.Current = Cursors.Default;
@@ -588,7 +565,11 @@ namespace HTBackupUserControl
                     Cursor.Current = Cursors.WaitCursor;
                     ListViewItem item = listViewTriggers.SelectedItems[0];
                     TriggerEditDialog triggerDlg = new TriggerEditDialog(item.Tag as Trigger, false);
-
+                    Form form = triggerDlg.FindForm();
+                    if (form !=null)
+                    {
+                        form.Text = "Edit Trigger";
+                    }
                     if (triggerDlg.ShowDialog() == DialogResult.OK)
                     {
                         updateTrigger(triggerDlg.Trigger, item);

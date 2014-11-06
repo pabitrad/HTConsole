@@ -115,7 +115,6 @@
       <DependentUpon>AddUser.cs</DependentUpon>
     </Compile>
     <Compile Include="BackupJob.cs" />
-    <Compile Include="BackupJobScheduler.cs" />
     <Compile Include="FormScheduleJobs.cs">
       <SubType>Form</SubType>
     </Compile>

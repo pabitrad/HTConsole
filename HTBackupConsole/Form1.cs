@@ -127,8 +127,11 @@ namespace HTBackupConsole
                     treeViewServer.Nodes.Add(node);
                 }
 
-                ServerPage.setRunningJobs(BackupJobScheduler.RunningJobs);
-                pageEssbaseBackup.setRunningJobs(BackupJobScheduler.RunningJobs);
+                pageEssbaseBackup.setServerBackupType(ServerBackupType.EssbaseBackup);
+                backupPageCluster.setServerBackupType(ServerBackupType.Cluster);
+
+                //ServerPage.setRunningJobs(BackupJobScheduler.RunningJobs);
+                //pageEssbaseBackup.setRunningJobs(BackupJobScheduler.RunningJobs);
             }
             catch (Exception ex)
             {
@@ -182,12 +185,15 @@ namespace HTBackupConsole
 
                 while (dr.Read())
                 {
-                    textBox1.Text = dr["SERVERNAME"].ToString();
+                    textBox1.Text = dr["SERVERNAME"].ToString().Trim();
                     textBox2.Text = dr["SERVERIP"].ToString();
                     textBox3.Text = dr["USER"].ToString();
                     textBox4.Text = dr["ESSUSER"].ToString();
                 }
 
+                ServerPage.setSelectedServer(textBox1.Text);
+                pageEssbaseBackup.setSelectedServer(textBox1.Text);
+                backupPageCluster.setSelectedServer(textBox1.Text);
                 //SqlCeDataAdapter da = new SqlCeDataAdapter(cmd);
 
             }
@@ -912,10 +918,10 @@ namespace HTBackupConsole
 
         private void tabControlEssbaseBackup_Selected(object sender, TabControlEventArgs e)
         {
-            if (tabControlEssbaseBackup.SelectedTab == tabPageEssbaseBackup)
-            {
-                pageEssbaseBackup.setServerBackupType(ServerBackupType.EssbaseBackup);
-            }
+            //if (tabControlEssbaseBackup.SelectedTab == tabPageEssbaseBackup)
+            //{
+            //    pageEssbaseBackup.setServerBackupType(ServerBackupType.EssbaseBackup);
+            //}
         }
 
         private bool isValidateDBConnectivity()
@@ -979,10 +985,10 @@ namespace HTBackupConsole
 
         private void tabControlBackup_Selected(object sender, TabControlEventArgs e)
         {
-            if (tabControlBackup.SelectedTab == tabPageCluster)
-            {
-                backupPageCluster.setServerBackupType(ServerBackupType.Cluster);
-            }
+            //if (tabControlBackup.SelectedTab == tabPageCluster)
+            //{
+            //    backupPageCluster.setServerBackupType(ServerBackupType.Cluster);
+            //}
         }
     }
 }

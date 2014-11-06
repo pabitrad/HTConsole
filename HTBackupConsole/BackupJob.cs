@@ -20,7 +20,7 @@ namespace HTConsoleCommonUtil
         private int _incrementInterval;
         private ServerBackupType _serverBackupType;
 
-        public System.Threading.Timer _jobTimer;
+        //public System.Threading.Timer _jobTimer;
 
         public string Name
         {
@@ -154,11 +154,11 @@ namespace HTConsoleCommonUtil
             return TaskManager.isTaskEnabled(Server + "-" + Name);
         }
 
-        public void stopTimer()
-        {
-            _jobTimer.Dispose();
-            _jobTimer = null;
-        }
+        //public void stopTimer()
+        //{
+        //    _jobTimer.Dispose();
+        //    _jobTimer = null;
+        //}
 
         public List<Microsoft.Win32.TaskScheduler.Action> getActions()
         {
@@ -170,9 +170,9 @@ namespace HTConsoleCommonUtil
             {
                 case ServerBackupType.ServerBackup:
                 case ServerBackupType.EssbaseBackup:
-                    application = "PowerShell";
+                    application = "Powershell";
                     string backupAppDirectory = HTConsoleHelper.getHTBackupInstallDirectory();
-                    executionCommand = "$now=Get-Date -format \"dd-MM-yyyy-HH.mm.ss\";";
+                    executionCommand += "$now=Get-Date -format \"dd-MM-yyyy-HH.mm.ss\";";
                     executionCommand += "mkdir " + BackupLocation + "\\" + "$now" + ";";
 
                     foreach (var sourceLocation in SourceLocations)
@@ -190,28 +190,27 @@ namespace HTConsoleCommonUtil
                             executionCommand += "/incremental ";
                         }
 
-                        executionCommand += ("/logfile=\"" + LogFileLocation + "\\HTBase.log\" /r /y ");
+                        executionCommand += ("/logfile=\'" + LogFileLocation + "\\HTBase.log\' /r /y ");
 
-                        executionCommand += ("\"" + sourceLocation + "\"");
+                        executionCommand += ("\'" + sourceLocation + "\'");
                         executionCommand += " ";
 
                         string backupStorage = BackupLocation + "/" + "$now";
 
                         executionCommand += ("\"" + backupStorage + "\"");
-                        executionCommand += "  >>  \"";
+                        executionCommand += "  >>  \'";
 
                         if (JobType == JOBTYPE.FULLBACKUP)
                         {
-                            executionCommand += (LogFileLocation + "\\HTBaseFullBackup.log\"");
+                            executionCommand += (LogFileLocation + "\\HTBaseFullBackup.log\'");
                         }
                         else if (JobType == JOBTYPE.INCREMENTAL)
                         {
-                            executionCommand += (LogFileLocation + "\\HTBaseIncrementalBackup.log\"");
+                            executionCommand += (LogFileLocation + "\\HTBaseIncrementalBackup.log\'");
                         }
-
-                        executionCommand += ";";
                     }
 
+                    executionCommand += ";";
                     listActions.Add(new ExecAction(application, executionCommand, null));
                     break;
 
