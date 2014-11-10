@@ -13,6 +13,9 @@ using System.Collections;
 using System.Globalization;
 using Microsoft.Win32.TaskScheduler;
 using HTConsoleCommonUtil;
+using System.Reflection;
+
+using FolderSelect;
 
 namespace HTBackupUserControl
 {
@@ -21,6 +24,10 @@ namespace HTBackupUserControl
         ServerBackupType _serverBackupType = ServerBackupType.ServerBackup;
         JOBTYPE _jobType = JOBTYPE.FULLBACKUP;
         string _selectedServer = string.Empty;
+
+        FolderSelectDialog _fsdSourceLocation = new FolderSelectDialog();
+        FolderSelectDialog _fsdLogLocation = new FolderSelectDialog();
+        FolderSelectDialog _fsdBackupLocation = new FolderSelectDialog();
 
         public BackupPage()
         {
@@ -45,60 +52,110 @@ namespace HTBackupUserControl
 
         public void setSelectedServer(string server)
         {
+            if (string.IsNullOrWhiteSpace(server))
+            {
+                return;
+            }
             _selectedServer = server.Trim();
+            _fsdSourceLocation.InitialDirectory = @"\\" + _selectedServer;
+            _fsdLogLocation.InitialDirectory = @"\\" + _selectedServer;
+            _fsdBackupLocation.InitialDirectory = @"\\" + _selectedServer;
 
             populateJobListview();
         }
 
         private void btnBrowseBackupLocation_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog.ShowDialog();
-            if (result == DialogResult.OK)
+            try
             {
-                txtboxBackupLocation.Text = folderBrowserDialog.SelectedPath;
+                if (string.IsNullOrWhiteSpace(txtboxBackupLocation.Text) == false)
+                {
+                    _fsdBackupLocation.InitialDirectory = txtboxBackupLocation.Text.Trim();
+                }
+
+                if (_fsdBackupLocation.ShowDialog())
+                {
+                    txtboxBackupLocation.Text = _fsdBackupLocation.FileName;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void btnBrowseLogDir_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                txtboxLogFileLocation.Text = folderBrowserDialog.SelectedPath;
+                if (string.IsNullOrWhiteSpace(txtboxLogFileLocation.Text) == false)
+                {
+                    _fsdLogLocation.InitialDirectory = txtboxLogFileLocation.Text.Trim();
+                }
+                if (_fsdLogLocation.ShowDialog())
+                {
+                    txtboxLogFileLocation.Text = _fsdLogLocation.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                listboxSourceLocations.Items.Add(folderBrowserDialog.SelectedPath);
+                if (_fsdSourceLocation.ShowDialog())
+                {
+                    listboxSourceLocations.Items.Add(_fsdSourceLocation.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (listboxSourceLocations.SelectedIndex >=0 )
+            try
             {
-                listboxSourceLocations.Items.RemoveAt(listboxSourceLocations.SelectedIndex);
+                if (listboxSourceLocations.SelectedIndex >= 0)
+                {
+                    listboxSourceLocations.Items.RemoveAt(listboxSourceLocations.SelectedIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void chkBoxIncremental_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox incremental = sender as CheckBox;
-            if (incremental != null)
+            try
             {
-                lblIncremental.Enabled = incremental.Checked;
-                numericUpDownBackupIncremental.Enabled = incremental.Checked;
+                CheckBox incremental = sender as CheckBox;
+                if (incremental != null)
+                {
+                    lblIncremental.Enabled = incremental.Checked;
+                    numericUpDownBackupIncremental.Enabled = incremental.Checked;
 
-                if (incremental.Checked)
-                {
-                    _jobType = JOBTYPE.INCREMENTAL;
+                    if (incremental.Checked)
+                    {
+                        _jobType = JOBTYPE.INCREMENTAL;
+                    }
+                    else
+                    {
+                        _jobType = JOBTYPE.FULLBACKUP;
+                    }
                 }
-                else
-                {
-                    _jobType = JOBTYPE.FULLBACKUP;
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -406,6 +463,8 @@ namespace HTBackupUserControl
 
                     listBoxJobs.Items.Add(listitem);
                 }
+
+                createBlankJob();
             }
         }
 
@@ -499,8 +558,6 @@ namespace HTBackupUserControl
                     }
                     setJobDetails(job);
                     readTriggers(job);
-
-                    //groupBoxJobDetails.Enabled =  !(isJobRunning(job.Server, job.Name)); // Disable the tab if job is already running or scheduled to start.
                 }
             }
             catch (Exception ex)
@@ -564,12 +621,7 @@ namespace HTBackupUserControl
                 {
                     Cursor.Current = Cursors.WaitCursor;
                     ListViewItem item = listViewTriggers.SelectedItems[0];
-                    TriggerEditDialog triggerDlg = new TriggerEditDialog(item.Tag as Trigger, false);
-                    Form form = triggerDlg.FindForm();
-                    if (form !=null)
-                    {
-                        form.Text = "Edit Trigger";
-                    }
+                    TriggerEditDialog triggerDlg = new TriggerEditDialog(item.Tag as Trigger, false) { Text = "Edit Trigger" };
                     if (triggerDlg.ShowDialog() == DialogResult.OK)
                     {
                         updateTrigger(triggerDlg.Trigger, item);
@@ -615,7 +667,6 @@ namespace HTBackupUserControl
                     if (MessageBox.Show("Would you like to delete selected trigger?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         listViewTriggers.Items.RemoveAt(listViewTriggers.SelectedIndices[0]);
-                        //TODO:Delete entry from trigger database.
                     }
                 }
                 else
@@ -631,10 +682,17 @@ namespace HTBackupUserControl
 
         private void listViewTriggers_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            ListView triggerView = sender as ListView;
-            if (triggerView != null)
+            try
             {
-                btnEditTrigger_Click(null, null);
+                ListView triggerView = sender as ListView;
+                if (triggerView != null)
+                {
+                    btnEditTrigger_Click(null, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

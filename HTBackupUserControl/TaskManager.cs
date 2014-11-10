@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Win32.TaskScheduler;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace HTConsoleCommonUtil
 {
@@ -11,6 +12,7 @@ namespace HTConsoleCommonUtil
     {
         static public void createTask(string taskName, List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
+            //using (TaskService ts = new TaskService("PABITRA-HP", "pabitra", "PABITRA-HP", "muna1969"))
             using (TaskService ts = new TaskService())
             {
                 try
@@ -54,9 +56,7 @@ namespace HTConsoleCommonUtil
 
         public static TriggerCollection getTriggers(string taskName)
         {
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
-
+            Task task = getTask(taskName);
             if (task != null)
             {
                 return task.Definition.Triggers;
@@ -67,9 +67,7 @@ namespace HTConsoleCommonUtil
 
         public static void modifyTask(string taskName, List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
-
+            Task task = getTask(taskName);
             if (task != null)
             {
                 TaskDefinition def = task.Definition;
@@ -82,27 +80,24 @@ namespace HTConsoleCommonUtil
                     def.Actions.Add(action);
                 }
 
+                TaskFolder tf = getTaskFolder();
                 tf.RegisterTaskDefinition(taskName, def);
             }
         }
 
         public static void deleteTask(string taskName)
         {
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
-
+            Task task = getTask(taskName);
             if (task != null)
             {
+                TaskFolder tf = getTaskFolder();
                 tf.DeleteTask(taskName);
             }
         }
 
         public static void enableTriggers(string taskName, bool enable)
         {
-
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
-
+            Task task = getTask(taskName);
             if (task != null)
             {
                 TaskDefinition def = task.Definition;
@@ -117,14 +112,15 @@ namespace HTConsoleCommonUtil
 
                 def.Triggers.Clear();
                 def.Triggers.AddRange(newTriggerList);
+
+                TaskFolder tf = getTaskFolder();
                 tf.RegisterTaskDefinition(taskName, def);
             }
         }
 
         public static bool isTaskEnabled(string taskName)
         {
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
+            Task task = getTask(taskName);
             TaskDefinition def = task.Definition;
             TriggerCollection triggers = def.Triggers;
             foreach (Trigger trigger in triggers)
@@ -140,8 +136,7 @@ namespace HTConsoleCommonUtil
 
         public static bool isTaskDisabled(string taskName)
         {
-            TaskFolder tf = getTaskFolder();
-            Task task = tf.Tasks[taskName];
+            Task task = getTask(taskName);
             TaskDefinition def = task.Definition;
             TriggerCollection triggers = def.Triggers;
             foreach (Trigger trigger in triggers)
@@ -153,6 +148,21 @@ namespace HTConsoleCommonUtil
             }
 
             return true;
+        }
+
+        private static Task getTask(string taskName)
+        {
+            TaskFolder tf = getTaskFolder();
+
+            Regex filter = new Regex(taskName);
+            TaskCollection collection = tf.GetTasks(filter);
+
+            if (collection == null || collection.Count == 0)
+            {
+                return null;
+            }
+            
+            return collection[0];
         }
      }
 }

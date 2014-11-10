@@ -41,7 +41,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownBackupIncremental = new System.Windows.Forms.NumericUpDown();
             this.btnReset = new System.Windows.Forms.Button();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.listBoxJobs = new System.Windows.Forms.ListView();
             this.jobName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxJobDetails = new System.Windows.Forms.GroupBox();
@@ -422,7 +421,6 @@
         private System.Windows.Forms.GroupBox grpBoxIncremental;
         private System.Windows.Forms.NumericUpDown numericUpDownBackupIncremental;
         private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ListView listBoxJobs;
         private System.Windows.Forms.ColumnHeader jobName;
         private System.Windows.Forms.GroupBox groupBoxJobDetails;

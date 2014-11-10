@@ -70,7 +70,7 @@
             // 
             this.butLogin.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.butLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butLogin.Location = new System.Drawing.Point(344, 296);
+            this.butLogin.Location = new System.Drawing.Point(266, 296);
             this.butLogin.Name = "butLogin";
             this.butLogin.Size = new System.Drawing.Size(75, 23);
             this.butLogin.TabIndex = 3;
@@ -81,7 +81,7 @@
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(263, 296);
+            this.button2.Location = new System.Drawing.Point(347, 296);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
