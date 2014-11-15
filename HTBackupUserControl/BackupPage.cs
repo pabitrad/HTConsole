@@ -265,8 +265,6 @@ namespace HTBackupUserControl
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
-                modifyTask();
-
                 BackupJob job = getSelectedJob();
                 if (job != null)
                 {
@@ -276,6 +274,8 @@ namespace HTBackupUserControl
                     job.IncrementInterval = incrementalInterval;
                     job.JobType = _jobType;
                 }
+
+                modifyTask();
                 MessageBox.Show("Job updated successfully.");
             }
         }

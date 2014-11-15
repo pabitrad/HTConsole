@@ -67,7 +67,7 @@
             // 
             // txtJobName
             // 
-            this.txtJobName.Location = new System.Drawing.Point(117, 19);
+            this.txtJobName.Location = new System.Drawing.Point(117, 23);
             this.txtJobName.Name = "txtJobName";
             this.txtJobName.Size = new System.Drawing.Size(235, 20);
             this.txtJobName.TabIndex = 54;
@@ -76,7 +76,7 @@
             // lblJobName
             // 
             this.lblJobName.AutoSize = true;
-            this.lblJobName.Location = new System.Drawing.Point(56, 22);
+            this.lblJobName.Location = new System.Drawing.Point(56, 26);
             this.lblJobName.Name = "lblJobName";
             this.lblJobName.Size = new System.Drawing.Size(55, 13);
             this.lblJobName.TabIndex = 53;
@@ -117,6 +117,7 @@
             // listboxSourceLocations
             // 
             this.listboxSourceLocations.FormattingEnabled = true;
+            this.listboxSourceLocations.HorizontalScrollbar = true;
             this.listboxSourceLocations.Location = new System.Drawing.Point(6, 19);
             this.listboxSourceLocations.Name = "listboxSourceLocations";
             this.listboxSourceLocations.Size = new System.Drawing.Size(235, 147);
@@ -131,6 +132,7 @@
             this.lblIncremental.Size = new System.Drawing.Size(42, 13);
             this.lblIncremental.TabIndex = 25;
             this.lblIncremental.Text = "Interval";
+            this.lblIncremental.Visible = false;
             // 
             // groupBoxFolderLocations
             // 
@@ -177,6 +179,7 @@
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 27;
             this.label1.Text = "Minutes";
+            this.label1.Visible = false;
             // 
             // numericUpDownBackupIncremental
             // 
@@ -190,6 +193,7 @@
             0,
             0,
             0});
+            this.numericUpDownBackupIncremental.Visible = false;
             // 
             // btnReset
             // 
@@ -286,11 +290,11 @@
             this.triggerStatus});
             this.listViewTriggers.FullRowSelect = true;
             this.listViewTriggers.HideSelection = false;
-            this.listViewTriggers.Location = new System.Drawing.Point(14, 126);
+            this.listViewTriggers.Location = new System.Drawing.Point(14, 111);
             this.listViewTriggers.MultiSelect = false;
             this.listViewTriggers.Name = "listViewTriggers";
             this.listViewTriggers.ShowGroups = false;
-            this.listViewTriggers.Size = new System.Drawing.Size(338, 161);
+            this.listViewTriggers.Size = new System.Drawing.Size(338, 176);
             this.listViewTriggers.TabIndex = 61;
             this.listViewTriggers.UseCompatibleStateImageBehavior = false;
             this.listViewTriggers.View = System.Windows.Forms.View.Details;

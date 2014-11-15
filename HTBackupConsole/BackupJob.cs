@@ -215,11 +215,11 @@ namespace HTConsoleCommonUtil
                     break;
 
                 case ServerBackupType.Cluster:
-                    application = "cmd ";
+                    application = "cmd /C";
                     string clusterDirectory = HTConsoleHelper.getHTClusterInstallDirectory();
                     foreach (var sourceLocation in SourceLocations)
                     {
-                        executionCommand = @"/C \\" + Server + "\\";
+                        //executionCommand = @"\\" + Server + "\\";
                         executionCommand += (clusterDirectory + "\\" + "HTCluster.exe ");
                         if (JobType == JOBTYPE.FULLBACKUP)
                         {
@@ -242,7 +242,7 @@ namespace HTConsoleCommonUtil
                         }
                         else if (JobType == JOBTYPE.INCREMENTAL)
                         {
-                            executionCommand += (LogFileLocation + "\\HTClusterIncrementalReplica.log\"");
+                            executionCommand += (LogFileLocation + "\\HTClusterIncrementalReplication.log\"");
                         }
 
                         listActions.Add(new ExecAction(application, executionCommand, null));

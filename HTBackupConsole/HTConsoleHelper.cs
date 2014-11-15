@@ -38,10 +38,9 @@ namespace HTConsoleCommonUtil
             SqlCeDataReader dr = cmd.ExecuteReader();
             string htBackupInstallDirectory = string.Empty;
 
-            while (dr.Read())
+            if (dr.Read())
             {
                 htBackupInstallDirectory = dr["DIRECTORY"].ToString();
-                break;
             }
 
             sqlConnection.Close();
@@ -61,10 +60,9 @@ namespace HTConsoleCommonUtil
             SqlCeDataReader dr = cmd.ExecuteReader();
             string htBackupInstallDirectory = string.Empty;
 
-            while (dr.Read())
+            if (dr.Read())
             {
                 htBackupInstallDirectory = dr["ClustureDirectory"].ToString();
-                break;
             }
 
             sqlConnection.Close();

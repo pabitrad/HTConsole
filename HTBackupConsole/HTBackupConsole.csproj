@@ -209,6 +209,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="ClassDiagram1.cd" />
     <None Include="HTConsole.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\HTBackup.datasource">

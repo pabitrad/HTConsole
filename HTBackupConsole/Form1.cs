@@ -990,5 +990,10 @@ namespace HTBackupConsole
             //    backupPageCluster.setServerBackupType(ServerBackupType.Cluster);
             //}
         }
+
+        private void versionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Version 3.3.1", "HTConsole");
+        }
     }
 }

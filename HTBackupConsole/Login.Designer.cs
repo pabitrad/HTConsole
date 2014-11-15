@@ -95,7 +95,6 @@
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(256, 20);
             this.username.TabIndex = 5;
-            this.username.Text = "bandrade";
             // 
             // password
             // 
@@ -103,7 +102,6 @@
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(256, 20);
             this.password.TabIndex = 6;
-            this.password.Text = "inter20net";
             // 
             // Login
             // 

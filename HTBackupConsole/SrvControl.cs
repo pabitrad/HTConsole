@@ -148,7 +148,36 @@ namespace HTBackupConsole
                 BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, backupItem.SubItems[0].Text);
                 if (job != null)
                 {
-                    string logFileName = job.LogFileLocation + "\\HTBaseFullBackup.log";
+                    string logFileName = string.Empty;
+                    switch (job.BackupType)
+                    {
+                        case ServerBackupType.ServerBackup:
+                        case ServerBackupType.EssbaseBackup:
+                            if (job.JobType == JOBTYPE.FULLBACKUP)
+                            {
+                                logFileName = job.LogFileLocation + "\\HTBaseFullBackup.log";
+                            }
+                            else if (job.JobType == JOBTYPE.INCREMENTAL)
+                            {
+                                logFileName = job.LogFileLocation + "\\HTBaseIncrementalBackup.log";
+                            }                            
+                            break;
+
+                        case ServerBackupType.Cluster:
+                            if (job.JobType == JOBTYPE.FULLBACKUP)
+                            {
+                                logFileName = job.LogFileLocation + "\\HTClusterFullReplication.log";
+                            }
+                            else if (job.JobType == JOBTYPE.INCREMENTAL)
+                            {
+                                logFileName = job.LogFileLocation + "\\HTClusterIncrementalReplication.log";
+                            }                            
+                            break;
+
+                        default:
+                            break;
+                    }
+
                     Process.Start("notepad.exe", logFileName);
                 }
             }
