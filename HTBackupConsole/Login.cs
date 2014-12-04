@@ -71,6 +71,7 @@ namespace HTBackupConsole
         private void Login_Load(object sender, EventArgs e)
         {
             password.PasswordChar = '*';
+            ActiveControl = username;
         }
     }
 }

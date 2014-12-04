@@ -19,7 +19,8 @@ namespace HTConsoleCommonUtil
                 {
                     TaskFolder tf = getTaskFolder();
                     TaskDefinition td = ts.NewTask();
-                    td.Principal.UserId = "SYSTEM";
+                    //td.Principal.UserId = "SYSTEM";
+                    td.Principal.LogonType = TaskLogonType.S4U;
                     td.RegistrationInfo.Description = "Task created by HTConsole.";
                     td.Triggers.AddRange(triggerList);
                     foreach (Microsoft.Win32.TaskScheduler.Action action in actionList)

@@ -69,7 +69,7 @@ namespace HTConsoleCommonUtil
             dr.Close();
             dr.Dispose();
 
-            htBackupInstallDirectory = htBackupInstallDirectory.Replace(':', '$');
+            //htBackupInstallDirectory = htBackupInstallDirectory.Replace(':', '$');
 
             return htBackupInstallDirectory;
         }

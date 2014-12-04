@@ -485,6 +485,8 @@ namespace HTBackupUserControl
 
             groupBoxJobDetails.Enabled = true;
             txtJobName.Enabled = true;
+
+            ActiveControl = txtJobName;
         }
 
         private void btnDeleteJob_Click(object sender, EventArgs e)

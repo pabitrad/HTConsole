@@ -215,7 +215,7 @@ namespace HTConsoleCommonUtil
                     break;
 
                 case ServerBackupType.Cluster:
-                    application = "cmd /C";
+                    application = "Powershell";
                     string clusterDirectory = HTConsoleHelper.getHTClusterInstallDirectory();
                     foreach (var sourceLocation in SourceLocations)
                     {
