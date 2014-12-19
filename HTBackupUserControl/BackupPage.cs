@@ -141,7 +141,7 @@ namespace HTBackupUserControl
                 if (incremental != null)
                 {
                     lblIncremental.Enabled = incremental.Checked;
-                    numericUpDownBackupIncremental.Enabled = incremental.Checked;
+                    //numericUpDownBackupIncremental.Enabled = incremental.Checked;
 
                     if (incremental.Checked)
                     {
@@ -245,7 +245,7 @@ namespace HTBackupUserControl
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
-            int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
+            //int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
 
             string sqlString = @"UPDATE ScheduleJob SET BackupType = @BackupType, SourceLocation = @SourceLocation, BackupLocation = @BackupLocation,
                                                         LogDirLocation = @LogDirLocation, IncrementInterval = @IncrementInterval
@@ -261,7 +261,7 @@ namespace HTBackupUserControl
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
             sqlCommand.Parameters.AddWithValue("@LogDirLocation", logFileLocation);
-            sqlCommand.Parameters.AddWithValue("@IncrementInterval", incrementalInterval);
+            sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
@@ -271,7 +271,7 @@ namespace HTBackupUserControl
                     job.LogFileLocation = logFileLocation;
                     job.BackupLocation = backupLocation;
                     job.SourceLocations = HTConsoleHelper.getSourceLocations(sourceLocations);
-                    job.IncrementInterval = incrementalInterval;
+                    //job.IncrementInterval = incrementalInterval;
                     job.JobType = _jobType;
                 }
 
@@ -285,7 +285,7 @@ namespace HTBackupUserControl
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
-            int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
+            //int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
 
             string sqlString = @"INSERT INTO ScheduleJob VALUES 
                                 (@Name, @Server, @BackupType, @SourceLocation, @BackupLocation, @LogDirLocation, @IncrementInterval, @ServerBackupType)";
@@ -300,7 +300,7 @@ namespace HTBackupUserControl
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
             sqlCommand.Parameters.AddWithValue("@LogDirLocation", logFileLocation);
-            sqlCommand.Parameters.AddWithValue("@IncrementInterval", incrementalInterval);
+            sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0);
             sqlCommand.Parameters.AddWithValue("@ServerBackupType", _serverBackupType);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
@@ -421,7 +421,7 @@ namespace HTBackupUserControl
             {
                 txtJobName.Text = job.Name;
                 chkBoxIncremental.Checked = (job.JobType == JOBTYPE.INCREMENTAL);
-                numericUpDownBackupIncremental.Value = job.IncrementInterval;
+                //numericUpDownBackupIncremental.Value = job.IncrementInterval;
                 txtboxLogFileLocation.Text = job.LogFileLocation;
                 txtboxBackupLocation.Text = job.BackupLocation;
                 listboxSourceLocations.Items.Clear();
@@ -432,7 +432,7 @@ namespace HTBackupUserControl
             {
                 txtJobName.Text = string.Empty;
                 chkBoxIncremental.Checked = false;
-                numericUpDownBackupIncremental.Value = 30;
+                //numericUpDownBackupIncremental.Value = 30;
                 txtboxLogFileLocation.Text = string.Empty;
                 txtboxBackupLocation.Text = string.Empty;
                 listboxSourceLocations.Items.Clear();
@@ -477,7 +477,7 @@ namespace HTBackupUserControl
         {
             txtJobName.Text = string.Empty;
             chkBoxIncremental.Checked = false;
-            numericUpDownBackupIncremental.Value = 30;
+            //numericUpDownBackupIncremental.Value = 30;
             txtboxLogFileLocation.Text = string.Empty;
             txtboxBackupLocation.Text = string.Empty;
             listboxSourceLocations.Items.Clear();
@@ -573,7 +573,7 @@ namespace HTBackupUserControl
             txtJobName.Text = job.Name;
             _jobType = job.JobType;
             chkBoxIncremental.Checked = (job.JobType == JOBTYPE.INCREMENTAL);
-            numericUpDownBackupIncremental.Value = job.IncrementInterval;
+            //numericUpDownBackupIncremental.Value = job.IncrementInterval;
             txtboxLogFileLocation.Text = job.LogFileLocation;
             txtboxBackupLocation.Text = job.BackupLocation;
             listboxSourceLocations.Items.Clear();
