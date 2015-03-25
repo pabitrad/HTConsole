@@ -11,10 +11,12 @@ using System.Data.SqlServerCe;
 using System.Configuration;
 using System.Collections;
 using System.Globalization;
+using System.Reflection;
+using System.DirectoryServices.AccountManagement;
+
 using Microsoft.Win32.TaskScheduler;
 using HTConsoleCommonUtil;
-using System.Reflection;
-
+using TaskManagerUtil;
 using FolderSelect;
 
 namespace HTBackupUserControl
@@ -140,7 +142,7 @@ namespace HTBackupUserControl
                 CheckBox incremental = sender as CheckBox;
                 if (incremental != null)
                 {
-                    lblIncremental.Enabled = incremental.Checked;
+                    //lblIncremental.Enabled = incremental.Checked;
                     //numericUpDownBackupIncremental.Enabled = incremental.Checked;
 
                     if (incremental.Checked)
@@ -161,6 +163,33 @@ namespace HTBackupUserControl
 
         private bool isValidate()
         {
+            if (string.IsNullOrWhiteSpace(_selectedServer))
+            {
+                MessageBox.Show("Selecte a server.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtRunAsUser.Text))
+            {
+                MessageBox.Show("Username can not be empty.");
+                txtRunAsUser.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            {
+                MessageBox.Show("Password can not be empty.");
+                txtPassword.Focus();
+                return false;
+            }
+
+            if (isAuthenticate() == false)
+            {
+                MessageBox.Show("Invalid username or password.");
+                txtRunAsUser.Focus();
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(txtJobName.Text))
             {
                 MessageBox.Show("Job Name can not be empty.");
@@ -217,6 +246,7 @@ namespace HTBackupUserControl
         {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
                 if (isValidate())
                 {
                     if (isJobAlreadyExits())
@@ -233,6 +263,10 @@ namespace HTBackupUserControl
             {
                 MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private bool isJobAlreadyExits()
@@ -245,10 +279,19 @@ namespace HTBackupUserControl
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
+            string runAsUser = txtRunAsUser.Text.Trim();
+            string password = txtPassword.Text.Trim();
+            bool highestPrivilege = chkHighestPrivilege.Checked;
+            bool storePassword = chkStorePassword.Checked;
             //int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
 
+//            string sqlString = @"UPDATE ScheduleJob SET BackupType = @BackupType, SourceLocation = @SourceLocation, BackupLocation = @BackupLocation,
+//                                                        LogDirLocation = @LogDirLocation, IncrementInterval = @IncrementInterval
+//                                                        WHERE Name = @JobName and Server = @NodeName";
+
             string sqlString = @"UPDATE ScheduleJob SET BackupType = @BackupType, SourceLocation = @SourceLocation, BackupLocation = @BackupLocation,
-                                                        LogDirLocation = @LogDirLocation, IncrementInterval = @IncrementInterval
+                                                        LogDirLocation = @LogDirLocation, RunAsUser = @RunAsUser, Password = @Password, 
+                                                        HighestPrivilege = @HighestPrivilege, StorePassword = @StorePassword
                                                         WHERE Name = @JobName and Server = @NodeName";
 
             SqlCeCommand sqlCommand = new SqlCeCommand(sqlString);
@@ -261,7 +304,11 @@ namespace HTBackupUserControl
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
             sqlCommand.Parameters.AddWithValue("@LogDirLocation", logFileLocation);
-            sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0);
+            //sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0); // Not used now
+            sqlCommand.Parameters.AddWithValue("@RunAsUser", runAsUser);
+            sqlCommand.Parameters.AddWithValue("@Password", password);
+            sqlCommand.Parameters.AddWithValue("@HighestPrivilege", highestPrivilege);
+            sqlCommand.Parameters.AddWithValue("@StorePassword", storePassword);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
@@ -273,6 +320,10 @@ namespace HTBackupUserControl
                     job.SourceLocations = HTConsoleHelper.getSourceLocations(sourceLocations);
                     //job.IncrementInterval = incrementalInterval;
                     job.JobType = _jobType;
+                    job.RunAsUser = runAsUser;
+                    job.Password = password;
+                    job.HighestPrivilege = highestPrivilege;
+                    job.StorePassword = storePassword;
                 }
 
                 modifyTask();
@@ -282,33 +333,44 @@ namespace HTBackupUserControl
 
         private void insertJob()
         {
+            string jobName = txtJobName.Text.Trim();
             string logFileLocation = txtboxLogFileLocation.Text;
             string backupLocation = txtboxBackupLocation.Text;
             string sourceLocations = getSourceLocations(listboxSourceLocations);
+            string runAsUser = txtRunAsUser.Text.Trim();
+            string password = txtPassword.Text.Trim();
+            bool highestPrivilege = chkHighestPrivilege.Checked;
+            bool storePassword = chkStorePassword.Checked;
             //int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
 
             string sqlString = @"INSERT INTO ScheduleJob VALUES 
-                                (@Name, @Server, @BackupType, @SourceLocation, @BackupLocation, @LogDirLocation, @IncrementInterval, @ServerBackupType)";
+                                (@Name, @Server, @BackupType, @SourceLocation, @BackupLocation, @LogDirLocation, @ServerBackupType,
+                                 @RunAsUser, @Password, @HighestPrivilege, @StorePassword)";
 
             SqlCeCommand sqlCommand = new SqlCeCommand(sqlString);
             sqlCommand.Connection = new SqlCeConnection(HTConsoleHelper.ConnectionString);
             sqlCommand.Connection.Open();
 
-            sqlCommand.Parameters.AddWithValue("@Name", txtJobName.Text);
+            sqlCommand.Parameters.AddWithValue("@Name", jobName);
             sqlCommand.Parameters.AddWithValue("@Server", _selectedServer);
             sqlCommand.Parameters.AddWithValue("@BackupType", _jobType);
             sqlCommand.Parameters.AddWithValue("@SourceLocation", sourceLocations);
             sqlCommand.Parameters.AddWithValue("@BackupLocation", backupLocation);
             sqlCommand.Parameters.AddWithValue("@LogDirLocation", logFileLocation);
-            sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0);
+            //sqlCommand.Parameters.AddWithValue("@IncrementInterval", 0);// Not used now.
             sqlCommand.Parameters.AddWithValue("@ServerBackupType", _serverBackupType);
+            sqlCommand.Parameters.AddWithValue("@RunAsUser", runAsUser);
+            sqlCommand.Parameters.AddWithValue("@Password", password);
+            sqlCommand.Parameters.AddWithValue("@HighestPrivilege", highestPrivilege);
+            sqlCommand.Parameters.AddWithValue("@StorePassword", storePassword);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
                 BackupJob job = addJobToListview();
                 createTask(job);
                 MessageBox.Show("Job saved successfully.");
-                reset();
+                selectJob(jobName); // select job in list view
+                //reset();
             }
 
             sqlCommand.Connection.Close();
@@ -321,17 +383,30 @@ namespace HTBackupUserControl
             
             string taskName = _selectedServer + "-" + txtJobName.Text.Trim();
 
-            TaskManager.createTask(taskName, triggers, actions);
+            SecurityOptions securityOption = new SecurityOptions();
+            securityOption.RunAsUser = job.RunAsUser;
+            securityOption.Password = job.Password;
+            securityOption.HighestPrivilege = job.HighestPrivilege;
+            securityOption.StorePassword = job.StorePassword;
+
+            TaskManager.createTask(taskName, securityOption, triggers, actions);
         }
 
         private void modifyTask()
         {
             List<Trigger> triggers = getTriggers();
-            List<Microsoft.Win32.TaskScheduler.Action> actions = getActions(getSelectedJob());
+            BackupJob job = getSelectedJob();
+            List<Microsoft.Win32.TaskScheduler.Action> actions = getActions(job);
 
             string taskName = _selectedServer + "-" + txtJobName.Text.Trim();
 
-            TaskManager.modifyTask(taskName, triggers, actions);
+            SecurityOptions securityOption = new SecurityOptions();
+            securityOption.RunAsUser = job.RunAsUser;
+            securityOption.Password = job.Password;
+            securityOption.HighestPrivilege = job.HighestPrivilege;
+            securityOption.StorePassword = job.StorePassword;
+
+            TaskManager.modifyTask(taskName, securityOption, triggers, actions);
         }
 
         private List<Trigger> getTriggers()
@@ -373,12 +448,22 @@ namespace HTBackupUserControl
             return null;
         }
 
+        private void selectJob(string jobName)
+        {
+            ListViewItem selectedItem = listBoxJobs.FindItemWithText(jobName);
+            if (selectedItem != null)
+            {
+                selectedItem.Selected = true;
+            }
+        }
+
         private BackupJob addJobToListview()
         {
             ListViewItem listitem = new ListViewItem(txtJobName.Text);
             listitem.SubItems.Add(HTConsoleHelper.getJobType(_jobType));
 
             listitem = listBoxJobs.Items.Add(listitem);
+            //listitem.Selected = true;
             BackupJob job = HTConsoleHelper.getSelectedJob(_selectedServer, txtJobName.Text.Trim());
             if (job != null)
             {
@@ -427,6 +512,11 @@ namespace HTBackupUserControl
                 listboxSourceLocations.Items.Clear();
                 listboxSourceLocations.Items.AddRange(job.SourceLocations.ToArray());
                 readTriggers(job);
+
+                txtRunAsUser.Text = job.RunAsUser;
+                txtPassword.Text = job.Password;
+                chkHighestPrivilege.Checked = job.HighestPrivilege;
+                chkStorePassword.Checked = job.StorePassword;
             }
             else
             {
@@ -437,6 +527,11 @@ namespace HTBackupUserControl
                 txtboxBackupLocation.Text = string.Empty;
                 listboxSourceLocations.Items.Clear();
                 listViewTriggers.Items.Clear();
+
+                txtRunAsUser.Text = string.Empty;
+                txtPassword.Text = string.Empty;
+                chkHighestPrivilege.Checked = true;
+                chkStorePassword.Checked = false;
             }
         }
 
@@ -464,7 +559,10 @@ namespace HTBackupUserControl
                     listBoxJobs.Items.Add(listitem);
                 }
 
-                createBlankJob();
+                if (txtJobName.Enabled == false)
+                {
+                    createBlankJob();
+                }
             }
         }
 
@@ -482,6 +580,11 @@ namespace HTBackupUserControl
             txtboxBackupLocation.Text = string.Empty;
             listboxSourceLocations.Items.Clear();
             listViewTriggers.Items.Clear();
+
+            txtRunAsUser.Text = string.Empty;
+            txtPassword.Text = string.Empty;
+            chkHighestPrivilege.Checked = true;
+            chkStorePassword.Checked = false;
 
             groupBoxJobDetails.Enabled = true;
             txtJobName.Enabled = true;
@@ -578,6 +681,11 @@ namespace HTBackupUserControl
             txtboxBackupLocation.Text = job.BackupLocation;
             listboxSourceLocations.Items.Clear();
             listboxSourceLocations.Items.AddRange(job.SourceLocations.ToArray());
+            txtRunAsUser.Text = job.RunAsUser;
+            txtPassword.Text = job.Password;
+            chkHighestPrivilege.Checked = job.HighestPrivilege;
+            chkStorePassword.Checked = job.StorePassword;
+
             txtJobName.Enabled = false;
         }
 
@@ -696,6 +804,35 @@ namespace HTBackupUserControl
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private bool isAuthenticate()
+        {
+            bool authenticate = false;
+            try
+            {
+
+                using (var domainContext = new PrincipalContext(ContextType.Domain, _selectedServer)) // Check authentication in case of active directory
+                {
+                    authenticate = domainContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                    if (authenticate == false)
+                    {
+                        using (var machineContext = new PrincipalContext(ContextType.Machine, _selectedServer)) // Check machine authentication
+                        {
+                            authenticate = machineContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                using (var machineContext = new PrincipalContext(ContextType.Machine, _selectedServer))
+                {
+                    authenticate = machineContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                }
+            }
+
+            return authenticate;
         }
     }
 }

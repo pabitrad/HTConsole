@@ -321,7 +321,7 @@
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -637,7 +637,7 @@
             this.tabPageEssbaseBackupParent.Location = new System.Drawing.Point(4, 22);
             this.tabPageEssbaseBackupParent.Name = "tabPageEssbaseBackupParent";
             this.tabPageEssbaseBackupParent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEssbaseBackupParent.Size = new System.Drawing.Size(1071, 408);
+            this.tabPageEssbaseBackupParent.Size = new System.Drawing.Size(1074, 408);
             this.tabPageEssbaseBackupParent.TabIndex = 1;
             this.tabPageEssbaseBackupParent.Text = "Essbase Backup";
             this.tabPageEssbaseBackupParent.UseVisualStyleBackColor = true;
@@ -752,7 +752,7 @@
             this.tabPageSQLServer.Controls.Add(this.tabControl3);
             this.tabPageSQLServer.Location = new System.Drawing.Point(4, 22);
             this.tabPageSQLServer.Name = "tabPageSQLServer";
-            this.tabPageSQLServer.Size = new System.Drawing.Size(1071, 408);
+            this.tabPageSQLServer.Size = new System.Drawing.Size(1074, 408);
             this.tabPageSQLServer.TabIndex = 3;
             this.tabPageSQLServer.Text = "Database Backup";
             this.tabPageSQLServer.UseVisualStyleBackColor = true;
@@ -1027,7 +1027,7 @@
             this.tabPageCluster.Controls.Add(this.backupPageCluster);
             this.tabPageCluster.Location = new System.Drawing.Point(4, 22);
             this.tabPageCluster.Name = "tabPageCluster";
-            this.tabPageCluster.Size = new System.Drawing.Size(1071, 408);
+            this.tabPageCluster.Size = new System.Drawing.Size(1074, 408);
             this.tabPageCluster.TabIndex = 6;
             this.tabPageCluster.Text = "Essbase Cluster";
             this.tabPageCluster.UseVisualStyleBackColor = true;

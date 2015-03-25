@@ -6,6 +6,7 @@ using System.Threading;
 using System.IO;
 using Microsoft.Win32.TaskScheduler;
 using HTConsoleCommonUtil;
+using TaskManagerUtil;
 
 namespace HTConsoleCommonUtil
 {
@@ -19,7 +20,10 @@ namespace HTConsoleCommonUtil
         private string _logFileLocation;
         private int _incrementInterval;
         private ServerBackupType _serverBackupType;
-
+        private string _runAsUser;
+        private string _password;
+        private bool _highestPrivilege;
+        private bool _storePassword;
         //public System.Threading.Timer _jobTimer;
 
         public string Name
@@ -123,6 +127,58 @@ namespace HTConsoleCommonUtil
             set
             {
                 _serverBackupType = value;
+            }
+        }
+
+        public string RunAsUser
+        {
+            get
+            {
+                return _runAsUser;
+            }
+
+            set
+            {
+                _runAsUser = value;
+            }
+        }
+
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+
+            set
+            {
+                _password = value;
+            }
+        }
+
+        public bool HighestPrivilege
+        {
+            get
+            {
+                return _highestPrivilege;
+            }
+
+            set
+            {
+                _highestPrivilege = value;
+            }
+        }
+
+        public bool StorePassword
+        {
+            get
+            {
+                return _storePassword;
+            }
+
+            set
+            {
+                _storePassword = value;
             }
         }
 

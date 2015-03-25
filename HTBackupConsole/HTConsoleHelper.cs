@@ -136,11 +136,15 @@ namespace HTConsoleCommonUtil
                 job.Name = dr["Name"].ToString();
                 job.Server = dr["Server"].ToString();
                 job.JobType = (JOBTYPE)(dr["BackupType"]);
-                job.IncrementInterval = Convert.ToInt32(dr["IncrementInterval"]);
+                //job.IncrementInterval = Convert.ToInt32(dr["IncrementInterval"]);
                 job.BackupLocation = dr["BackupLocation"].ToString();
                 job.LogFileLocation = dr["LogDirLocation"].ToString();
                 job.SourceLocations = getSourceLocations(dr["SourceLocation"].ToString());
                 job.BackupType = (ServerBackupType)(dr["ServerBackupType"]);
+                job.RunAsUser = dr["RunAsUser"].ToString();
+                job.Password = dr["Password"].ToString();
+                job.HighestPrivilege = Convert.ToBoolean(dr["HighestPrivilege"]);
+                job.StorePassword = Convert.ToBoolean(dr["StorePassword"]);
             }
 
             sqlConnection.Close();

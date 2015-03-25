@@ -6,11 +6,72 @@ using Microsoft.Win32.TaskScheduler;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace HTConsoleCommonUtil
+namespace TaskManagerUtil
 {
+    public class SecurityOptions
+    {
+        string _runAsUser;
+        string _password;
+        bool _highestPrivilege;
+        bool _storePassword;
+
+        public string RunAsUser
+        {
+            get
+            {
+                return _runAsUser;
+            }
+
+            set
+            {
+                _runAsUser = value;
+            }
+        }
+
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+
+            set
+            {
+                _password = value;
+            }
+        }
+
+        public bool HighestPrivilege
+        {
+            get
+            {
+                return _highestPrivilege;
+            }
+
+            set
+            {
+                _highestPrivilege = value;
+            }
+        }
+
+        public bool StorePassword
+        {
+            get
+            {
+                return _storePassword;
+            }
+
+            set
+            {
+                _storePassword = value;
+            }
+        }
+    }
+
     public class TaskManager
     {
-        static public void createTask(string taskName, List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
+        static public void createTask(string taskName, SecurityOptions securityOptions,
+                                      List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
             //using (TaskService ts = new TaskService("PABITRA-HP", "pabitra", "PABITRA-HP", "muna1969"))
             using (TaskService ts = new TaskService())
@@ -20,15 +81,26 @@ namespace HTConsoleCommonUtil
                     TaskFolder tf = getTaskFolder();
                     TaskDefinition td = ts.NewTask();
                     //td.Principal.UserId = "SYSTEM";
-                    td.Principal.LogonType = TaskLogonType.S4U;
+                    //td.Principal.LogonType = TaskLogonType.S4U;
                     td.RegistrationInfo.Description = "Task created by HTConsole.";
                     td.Triggers.AddRange(triggerList);
                     foreach (Microsoft.Win32.TaskScheduler.Action action in actionList)
                     {
                         td.Actions.Add(action);
                     }
-                    td.Principal.RunLevel = TaskRunLevel.Highest;
-                    tf.RegisterTaskDefinition(taskName, td);
+                    if (securityOptions.HighestPrivilege)
+                    {
+                        td.Principal.RunLevel = TaskRunLevel.Highest;
+                    }
+
+                    TaskLogonType logonType = TaskLogonType.S4U;
+                    if (securityOptions.StorePassword)
+                    {
+                        logonType = TaskLogonType.Password;
+                    }
+                    string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);
+                    tf.RegisterTaskDefinition(taskName, td, TaskCreation.Create, runAsUser,
+                                              securityOptions.Password, logonType);
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +138,8 @@ namespace HTConsoleCommonUtil
             return null;
         }
 
-        public static void modifyTask(string taskName, List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
+        public static void modifyTask(string taskName, SecurityOptions securityOptions,
+                                      List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
             Task task = getTask(taskName);
             if (task != null)
@@ -81,8 +154,27 @@ namespace HTConsoleCommonUtil
                     def.Actions.Add(action);
                 }
 
-                TaskFolder tf = getTaskFolder();
-                tf.RegisterTaskDefinition(taskName, def);
+                if (securityOptions.HighestPrivilege)
+                {
+                    def.Principal.RunLevel = TaskRunLevel.Highest;
+                }
+                else
+                {
+                    def.Principal.RunLevel = TaskRunLevel.LUA;
+                }
+
+                TaskLogonType logonType = TaskLogonType.S4U;
+                if (securityOptions.StorePassword)
+                {
+                    logonType = TaskLogonType.Password;
+                }
+
+                string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);                
+                TaskFolder tf = getTaskFolder();                
+                tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
+                                          securityOptions.Password, logonType);
+
+                //tf.RegisterTaskDefinition(taskName, def);
             }
         }
 

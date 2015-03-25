@@ -43,26 +43,29 @@
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(0, 1);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(437, 180);
+            this.pictureBox1.Size = new System.Drawing.Size(583, 222);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(94, 217);
+            this.label1.Location = new System.Drawing.Point(125, 267);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.Size = new System.Drawing.Size(83, 17);
             this.label1.TabIndex = 1;
             this.label1.Text = "User Name:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 254);
+            this.label2.Location = new System.Drawing.Point(125, 313);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(73, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Password:";
             // 
@@ -70,9 +73,10 @@
             // 
             this.butLogin.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.butLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butLogin.Location = new System.Drawing.Point(266, 296);
+            this.butLogin.Location = new System.Drawing.Point(355, 364);
+            this.butLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.butLogin.Name = "butLogin";
-            this.butLogin.Size = new System.Drawing.Size(75, 23);
+            this.butLogin.Size = new System.Drawing.Size(100, 28);
             this.butLogin.TabIndex = 3;
             this.butLogin.Text = "Login";
             this.butLogin.UseVisualStyleBackColor = true;
@@ -81,9 +85,10 @@
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(347, 296);
+            this.button2.Location = new System.Drawing.Point(463, 364);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 4;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
@@ -91,25 +96,25 @@
             // 
             // username
             // 
-            this.username.Location = new System.Drawing.Point(163, 214);
+            this.username.Location = new System.Drawing.Point(217, 263);
+            this.username.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(256, 20);
+            this.username.Size = new System.Drawing.Size(340, 22);
             this.username.TabIndex = 5;
-            this.username.Text = "bandrade";
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(163, 251);
+            this.password.Location = new System.Drawing.Point(217, 309);
+            this.password.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.password.Name = "password";
-            this.password.Size = new System.Drawing.Size(256, 20);
+            this.password.Size = new System.Drawing.Size(340, 22);
             this.password.TabIndex = 6;
-            this.password.Text = "inter20net";
             // 
             // Login
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 329);
+            this.ClientSize = new System.Drawing.Size(575, 405);
             this.Controls.Add(this.password);
             this.Controls.Add(this.username);
             this.Controls.Add(this.button2);
@@ -118,6 +123,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Login";
