@@ -120,6 +120,16 @@
             this.lstNetworkInstances = new System.Windows.Forms.ListBox();
             this.tabPageCluster = new System.Windows.Forms.TabPage();
             this.backupPageCluster = new HTBackupUserControl.BackupPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.listBoxJobNames = new System.Windows.Forms.ListBox();
+            this.btnSavePolicy = new System.Windows.Forms.Button();
+            this.btnCancelPolicy = new System.Windows.Forms.Button();
+            this.chkBoxCompress = new System.Windows.Forms.CheckBox();
+            this.lblWeek = new System.Windows.Forms.Label();
+            this.numericUpDownBackupRetension = new System.Windows.Forms.NumericUpDown();
+            this.labelDeleteInEvery = new System.Windows.Forms.Label();
+            this.lblBackupRetension = new System.Windows.Forms.Label();
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.label15 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
@@ -165,6 +175,8 @@
             this.tabPage11.SuspendLayout();
             this.tabPage12.SuspendLayout();
             this.tabPageCluster.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBackupRetension)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picGraph)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.perfMain)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -456,6 +468,7 @@
             this.tabControlBackup.Controls.Add(this.tabPageEssbaseBackupParent);
             this.tabControlBackup.Controls.Add(this.tabPageSQLServer);
             this.tabControlBackup.Controls.Add(this.tabPageCluster);
+            this.tabControlBackup.Controls.Add(this.tabPage1);
             this.tabControlBackup.Location = new System.Drawing.Point(184, 53);
             this.tabControlBackup.Name = "tabControlBackup";
             this.tabControlBackup.SelectedIndex = 0;
@@ -637,7 +650,7 @@
             this.tabPageEssbaseBackupParent.Location = new System.Drawing.Point(4, 22);
             this.tabPageEssbaseBackupParent.Name = "tabPageEssbaseBackupParent";
             this.tabPageEssbaseBackupParent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEssbaseBackupParent.Size = new System.Drawing.Size(1074, 408);
+            this.tabPageEssbaseBackupParent.Size = new System.Drawing.Size(1071, 408);
             this.tabPageEssbaseBackupParent.TabIndex = 1;
             this.tabPageEssbaseBackupParent.Text = "Essbase Backup";
             this.tabPageEssbaseBackupParent.UseVisualStyleBackColor = true;
@@ -752,7 +765,7 @@
             this.tabPageSQLServer.Controls.Add(this.tabControl3);
             this.tabPageSQLServer.Location = new System.Drawing.Point(4, 22);
             this.tabPageSQLServer.Name = "tabPageSQLServer";
-            this.tabPageSQLServer.Size = new System.Drawing.Size(1074, 408);
+            this.tabPageSQLServer.Size = new System.Drawing.Size(1071, 408);
             this.tabPageSQLServer.TabIndex = 3;
             this.tabPageSQLServer.Text = "Database Backup";
             this.tabPageSQLServer.UseVisualStyleBackColor = true;
@@ -1027,7 +1040,7 @@
             this.tabPageCluster.Controls.Add(this.backupPageCluster);
             this.tabPageCluster.Location = new System.Drawing.Point(4, 22);
             this.tabPageCluster.Name = "tabPageCluster";
-            this.tabPageCluster.Size = new System.Drawing.Size(1074, 408);
+            this.tabPageCluster.Size = new System.Drawing.Size(1071, 408);
             this.tabPageCluster.TabIndex = 6;
             this.tabPageCluster.Text = "Essbase Cluster";
             this.tabPageCluster.UseVisualStyleBackColor = true;
@@ -1039,6 +1052,116 @@
             this.backupPageCluster.Name = "backupPageCluster";
             this.backupPageCluster.Size = new System.Drawing.Size(929, 461);
             this.backupPageCluster.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.listBoxJobNames);
+            this.tabPage1.Controls.Add(this.btnSavePolicy);
+            this.tabPage1.Controls.Add(this.btnCancelPolicy);
+            this.tabPage1.Controls.Add(this.chkBoxCompress);
+            this.tabPage1.Controls.Add(this.lblWeek);
+            this.tabPage1.Controls.Add(this.numericUpDownBackupRetension);
+            this.tabPage1.Controls.Add(this.labelDeleteInEvery);
+            this.tabPage1.Controls.Add(this.lblBackupRetension);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1071, 408);
+            this.tabPage1.TabIndex = 7;
+            this.tabPage1.Text = "Policies";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(22, 31);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(60, 13);
+            this.label9.TabIndex = 63;
+            this.label9.Text = "Job Names";
+            // 
+            // listBoxJobNames
+            // 
+            this.listBoxJobNames.FormattingEnabled = true;
+            this.listBoxJobNames.Location = new System.Drawing.Point(23, 49);
+            this.listBoxJobNames.Name = "listBoxJobNames";
+            this.listBoxJobNames.Size = new System.Drawing.Size(231, 199);
+            this.listBoxJobNames.TabIndex = 62;
+            this.listBoxJobNames.SelectedIndexChanged += new System.EventHandler(this.listBoxJobNames_SelectedIndexChanged);
+            // 
+            // btnSavePolicy
+            // 
+            this.btnSavePolicy.Location = new System.Drawing.Point(637, 321);
+            this.btnSavePolicy.Name = "btnSavePolicy";
+            this.btnSavePolicy.Size = new System.Drawing.Size(75, 23);
+            this.btnSavePolicy.TabIndex = 61;
+            this.btnSavePolicy.Text = "Save";
+            this.btnSavePolicy.UseVisualStyleBackColor = true;
+            this.btnSavePolicy.Click += new System.EventHandler(this.btnSavePolicy_Click);
+            // 
+            // btnCancelPolicy
+            // 
+            this.btnCancelPolicy.Location = new System.Drawing.Point(718, 321);
+            this.btnCancelPolicy.Name = "btnCancelPolicy";
+            this.btnCancelPolicy.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelPolicy.TabIndex = 60;
+            this.btnCancelPolicy.Text = "Cancel";
+            this.btnCancelPolicy.UseVisualStyleBackColor = true;
+            // 
+            // chkBoxCompress
+            // 
+            this.chkBoxCompress.AutoSize = true;
+            this.chkBoxCompress.Location = new System.Drawing.Point(279, 97);
+            this.chkBoxCompress.Name = "chkBoxCompress";
+            this.chkBoxCompress.Size = new System.Drawing.Size(72, 17);
+            this.chkBoxCompress.TabIndex = 59;
+            this.chkBoxCompress.Text = "Compress";
+            this.chkBoxCompress.UseVisualStyleBackColor = true;
+            // 
+            // lblWeek
+            // 
+            this.lblWeek.AutoSize = true;
+            this.lblWeek.Location = new System.Drawing.Point(411, 54);
+            this.lblWeek.Name = "lblWeek";
+            this.lblWeek.Size = new System.Drawing.Size(36, 13);
+            this.lblWeek.TabIndex = 3;
+            this.lblWeek.Text = "Week";
+            // 
+            // numericUpDownBackupRetension
+            // 
+            this.numericUpDownBackupRetension.Location = new System.Drawing.Point(360, 51);
+            this.numericUpDownBackupRetension.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBackupRetension.Name = "numericUpDownBackupRetension";
+            this.numericUpDownBackupRetension.Size = new System.Drawing.Size(48, 20);
+            this.numericUpDownBackupRetension.TabIndex = 2;
+            this.numericUpDownBackupRetension.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // labelDeleteInEvery
+            // 
+            this.labelDeleteInEvery.AutoSize = true;
+            this.labelDeleteInEvery.Location = new System.Drawing.Point(276, 53);
+            this.labelDeleteInEvery.Name = "labelDeleteInEvery";
+            this.labelDeleteInEvery.Size = new System.Drawing.Size(78, 13);
+            this.labelDeleteInEvery.TabIndex = 1;
+            this.labelDeleteInEvery.Text = "Delete in every";
+            // 
+            // lblBackupRetension
+            // 
+            this.lblBackupRetension.AutoSize = true;
+            this.lblBackupRetension.Location = new System.Drawing.Point(276, 31);
+            this.lblBackupRetension.Name = "lblBackupRetension";
+            this.lblBackupRetension.Size = new System.Drawing.Size(93, 13);
+            this.lblBackupRetension.TabIndex = 0;
+            this.lblBackupRetension.Text = "Backup Retention";
             // 
             // monthCalendar1
             // 
@@ -1303,6 +1426,9 @@
             this.tabPage11.ResumeLayout(false);
             this.tabPage12.ResumeLayout(false);
             this.tabPageCluster.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBackupRetension)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picGraph)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.perfMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -1428,6 +1554,16 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TabPage tabPageCluster;
         private HTBackupUserControl.BackupPage backupPageCluster;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Label lblBackupRetension;
+        private System.Windows.Forms.NumericUpDown numericUpDownBackupRetension;
+        private System.Windows.Forms.Label labelDeleteInEvery;
+        private System.Windows.Forms.Label lblWeek;
+        private System.Windows.Forms.CheckBox chkBoxCompress;
+        private System.Windows.Forms.Button btnSavePolicy;
+        private System.Windows.Forms.Button btnCancelPolicy;
+        private System.Windows.Forms.ListBox listBoxJobNames;
+        private System.Windows.Forms.Label label9;
     }
 }
 

@@ -142,9 +142,6 @@ namespace HTBackupUserControl
                 CheckBox incremental = sender as CheckBox;
                 if (incremental != null)
                 {
-                    //lblIncremental.Enabled = incremental.Checked;
-                    //numericUpDownBackupIncremental.Enabled = incremental.Checked;
-
                     if (incremental.Checked)
                     {
                         _jobType = JOBTYPE.INCREMENTAL;
@@ -283,17 +280,13 @@ namespace HTBackupUserControl
             string password = txtPassword.Text.Trim();
             bool highestPrivilege = chkHighestPrivilege.Checked;
             bool storePassword = chkStorePassword.Checked;
-            //int incrementalInterval = (_jobType == JOBTYPE.INCREMENTAL) ? (int)numericUpDownBackupIncremental.Value : 0;
-
-//            string sqlString = @"UPDATE ScheduleJob SET BackupType = @BackupType, SourceLocation = @SourceLocation, BackupLocation = @BackupLocation,
-//                                                        LogDirLocation = @LogDirLocation, IncrementInterval = @IncrementInterval
-//                                                        WHERE Name = @JobName and Server = @NodeName";
 
             string sqlString = @"UPDATE ScheduleJob SET BackupType = @BackupType, SourceLocation = @SourceLocation, BackupLocation = @BackupLocation,
                                                         LogDirLocation = @LogDirLocation, RunAsUser = @RunAsUser, Password = @Password, 
                                                         HighestPrivilege = @HighestPrivilege, StorePassword = @StorePassword
                                                         WHERE Name = @JobName and Server = @NodeName";
-
+            
+            //BackupRetension = @BackupRetension, Compress = @Compress
             SqlCeCommand sqlCommand = new SqlCeCommand(sqlString);
             sqlCommand.Connection = new SqlCeConnection(HTConsoleHelper.ConnectionString);
             sqlCommand.Connection.Open();
@@ -309,6 +302,8 @@ namespace HTBackupUserControl
             sqlCommand.Parameters.AddWithValue("@Password", password);
             sqlCommand.Parameters.AddWithValue("@HighestPrivilege", highestPrivilege);
             sqlCommand.Parameters.AddWithValue("@StorePassword", storePassword);
+            //sqlCommand.Parameters.AddWithValue("@BackupRetension", DBNull.Value);
+            //sqlCommand.Parameters.AddWithValue("@Compress", DBNull.Value);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {
@@ -345,7 +340,7 @@ namespace HTBackupUserControl
 
             string sqlString = @"INSERT INTO ScheduleJob VALUES 
                                 (@Name, @Server, @BackupType, @SourceLocation, @BackupLocation, @LogDirLocation, @ServerBackupType,
-                                 @RunAsUser, @Password, @HighestPrivilege, @StorePassword)";
+                                 @RunAsUser, @Password, @HighestPrivilege, @StorePassword, @Compress, @BackupRetension)";
 
             SqlCeCommand sqlCommand = new SqlCeCommand(sqlString);
             sqlCommand.Connection = new SqlCeConnection(HTConsoleHelper.ConnectionString);
@@ -363,6 +358,8 @@ namespace HTBackupUserControl
             sqlCommand.Parameters.AddWithValue("@Password", password);
             sqlCommand.Parameters.AddWithValue("@HighestPrivilege", highestPrivilege);
             sqlCommand.Parameters.AddWithValue("@StorePassword", storePassword);
+            sqlCommand.Parameters.AddWithValue("@BackupRetension", DBNull.Value);
+            sqlCommand.Parameters.AddWithValue("@Compress", DBNull.Value);
 
             if (sqlCommand.ExecuteNonQuery() > 0)
             {

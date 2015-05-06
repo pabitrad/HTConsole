@@ -23,6 +23,25 @@ namespace HTConsoleCommonUtil
             }
         }
 
+        public static List<string> getJobNames(string selectedServer)
+        {
+            List<string> jobNames = new List<string>();
+
+            SqlCeCommand cmd = new SqlCeCommand("SELECT Name FROM ScheduleJob WHERE Server = @SERVERNAME");
+            SqlCeConnection sqlConnection = new SqlCeConnection(ConfigurationManager.ConnectionStrings["HTConsoleConnectionString"].ToString());
+            cmd.Connection = sqlConnection;
+            sqlConnection.Open();
+            cmd.Parameters.AddWithValue("@SERVERNAME", selectedServer);
+
+            SqlCeDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                jobNames.Add(dr["Name"].ToString());
+            }
+
+            return jobNames;
+        }
+
         public static string getJobType(JOBTYPE jobType)
         {
             return jobTypeDictionary[jobType];

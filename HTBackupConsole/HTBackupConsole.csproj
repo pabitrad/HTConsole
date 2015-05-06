@@ -133,6 +133,7 @@
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="PolicyManager.cs" />
     <Compile Include="RemoveServer.cs">
       <SubType>Form</SubType>
     </Compile>

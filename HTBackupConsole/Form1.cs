@@ -47,6 +47,8 @@ namespace HTBackupConsole
             InitializeComponent();
             //setControlsForDirtyCheck(tabPageServerBackup);
             populateMonitoringServers();
+
+            populatePolicyTab();
         }
 
         //private void setControlsForDirtyCheck(Control window)
@@ -86,6 +88,22 @@ namespace HTBackupConsole
             }
         }
 
+        private void populatePolicyTab()
+        {
+            string serverName = textBox1.Text;
+            if (string.IsNullOrWhiteSpace(serverName))
+            {
+                return;
+            }
+            List<Policy> policies = PolicyManager.getPolicies(textBox1.Text);
+            listBoxJobNames.Items.Clear();
+           
+            listBoxJobNames.Tag = policies;
+            foreach (Policy policy in policies)
+            {
+                listBoxJobNames.Items.Add(policy.jobName);
+            }
+        }
         //private void InputControls_OnChange(object sender, EventArgs e)
         //{
         //    isDirty = true;
@@ -194,8 +212,7 @@ namespace HTBackupConsole
                 ServerPage.setSelectedServer(textBox1.Text);
                 pageEssbaseBackup.setSelectedServer(textBox1.Text);
                 backupPageCluster.setSelectedServer(textBox1.Text);
-                //SqlCeDataAdapter da = new SqlCeDataAdapter(cmd);
-
+                populatePolicyTab();
             }
             catch (Exception ex)
             {
@@ -266,10 +283,7 @@ namespace HTBackupConsole
 
                 while (dr.Read())
                 {
-                    //comboBox1.Items.Add(dr["SERVERNAME"]);
                     comboBox2.Items.Add(dr["SERVERNAME"]);
-                    //cmbServerShedule.Items.Add(dr["SERVERNAME"]);
-                    //comboBox4.Items.Add(dr["SERVERNAME"]);
                 }
 
                 dr.Close();
@@ -994,6 +1008,51 @@ namespace HTBackupConsole
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Version 3.3.1", "HTConsole");
+        }
+
+        private void btnSavePolicy_Click(object sender, EventArgs e)
+        {
+            string serverName = textBox1.Text;
+            string jobName = listBoxJobNames.SelectedItem.ToString();
+
+            if (string.IsNullOrWhiteSpace(jobName) == false)
+            {
+                List<Policy> policies = listBoxJobNames.Tag as List<Policy>;
+                Policy selectedPolicy = new Policy();
+                foreach (Policy policy in policies)
+                {
+                    if (policy.jobName == jobName)
+                    {
+                        selectedPolicy = policy;
+                        break;
+                    }
+                }
+
+                selectedPolicy.backupRetension = (int)numericUpDownBackupRetension.Value;
+                selectedPolicy.compress = chkBoxCompress.Checked;
+
+                if (PolicyManager.updatePolicy(selectedPolicy) > 0)
+                {
+                    MessageBox.Show("Policy Saved successfully.", "HTConsole");
+                }
+            }
+        }
+
+        private void listBoxJobNames_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string jobName = listBoxJobNames.SelectedItem.ToString();
+
+            List<Policy> policies = listBoxJobNames.Tag as List<Policy>;
+            foreach (Policy policy in policies)
+            {
+                if (policy.jobName == jobName)
+                {
+                    numericUpDownBackupRetension.Value = policy.backupRetension;
+                    chkBoxCompress.Checked = policy.compress;
+                    break;
+                }
+            }
+
         }
     }
 }
