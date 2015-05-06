@@ -1124,9 +1124,9 @@
             this.lblWeek.AutoSize = true;
             this.lblWeek.Location = new System.Drawing.Point(411, 54);
             this.lblWeek.Name = "lblWeek";
-            this.lblWeek.Size = new System.Drawing.Size(36, 13);
+            this.lblWeek.Size = new System.Drawing.Size(31, 13);
             this.lblWeek.TabIndex = 3;
-            this.lblWeek.Text = "Week";
+            this.lblWeek.Text = "Days";
             // 
             // numericUpDownBackupRetension
             // 
