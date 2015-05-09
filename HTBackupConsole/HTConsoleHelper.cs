@@ -23,6 +23,11 @@ namespace HTConsoleCommonUtil
             }
         }
 
+        public static string TimestampSeparator
+        {
+            get { return "-"; }//TODO use in policy manager
+        }
+
         public static List<string> getJobNames(string selectedServer)
         {
             List<string> jobNames = new List<string>();

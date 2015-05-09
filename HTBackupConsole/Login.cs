@@ -49,6 +49,7 @@ namespace HTBackupConsole
                     Form1 Form1 = new Form1();
                     Form1.Show();
                     this.Hide();
+                    PolicyManager.runAutomaticPoliciesHandling();
                 }
                 else
                 {
