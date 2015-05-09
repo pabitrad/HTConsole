@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,18 @@ namespace HTBackupConsole
         public bool compress;
     }
 
+    struct JobBackupLocation
+    {
+        public string backupLocation;
+        public Policy policy;
+    }
+
     class PolicyManager
     {
         private const string RETENTION_SUBFOLDER_NAME = "Retention";
         private const string RETENTION_FILE_EXTENSION = ".zip";
-        private const string BACKUPJOB_FOLDER_SETTING = "BackupJobRootFolder";
         private const string POLICY_HANDLE_PERIOD_IN_HOURS_SETTING = "PolicyHandlePeriodInHours";
+        private static readonly object _policyHandlingSyncObject = new object();
 
         private static System.Threading.Timer _policyTimer;
 
@@ -56,29 +63,34 @@ namespace HTBackupConsole
             return policies;
         }
 
-        public static List<Policy> getAllPolicies()
+        public static List<JobBackupLocation> getJobsBackupLocations()
         {
-            List<Policy> policies = new List<Policy>();
-            SqlCeCommand cmd = new SqlCeCommand("SELECT Name, BackupRetension, Compress, Server FROM ScheduleJob");
+            SqlCeCommand cmd = new SqlCeCommand("SELECT Name, BackupLocation, BackupRetension, Compress, Server FROM ScheduleJob");
             SqlCeConnection sqlConnection =
                 new SqlCeConnection(ConfigurationManager.ConnectionStrings["HTConsoleConnectionString"].ToString());
             cmd.Connection = sqlConnection;
             sqlConnection.Open();
 
+            var jobsBackupLocations = new List<JobBackupLocation>();
             SqlCeDataReader dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                Policy policy = new Policy
+                Policy backupPolicy = new Policy
                 {
                     serverName = dataReader["Server"].ToString(),
                     jobName = dataReader["Name"].ToString(),
                     backupRetension = getBackupRetentionField(dataReader),
                     compress = getCompressField(dataReader)
                 };
-                policies.Add(policy);
+                JobBackupLocation jobBackupLocation = new JobBackupLocation
+                {
+                    backupLocation = dataReader["BackupLocation"].ToString(),
+                    policy = backupPolicy,
+                };
+                jobsBackupLocations.Add(jobBackupLocation);
             }
             dataReader.Close();
-            return policies;
+            return jobsBackupLocations;
         }
 
         public static int updatePolicy(Policy policy)
@@ -100,27 +112,12 @@ namespace HTBackupConsole
         }
 
         /// <summary>
-        /// Starts periodic policies handling.
+        /// Starts periodic jobBackupLocations handling.
         /// </summary>
         public static void runAutomaticPoliciesHandling()
         {
             if (_policyTimer != null)
             {
-                return;
-            }
-
-            string backupJobRootFolder = getBackupJobRootFolderTrailingSlash();
-            try {
-                Directory.GetAccessControl(backupJobRootFolder);
-            }
-            catch (Exception)
-            {
-                string error = string.Format(
-                    "Some problem caused with job's root folder access: \"{0}\". " +
-                    "Policies automation handling will not start.\n" +
-                    "Please, check folder existence and permissions for HTConsole, and try again."
-                    , backupJobRootFolder);
-                MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -140,87 +137,122 @@ namespace HTBackupConsole
         }
 
         /// <summary>
-        /// Enumerates all entries of ScheduleJob table and apply job policies to appropriate jobs.
+        /// Enumerates all entries of ScheduleJob table and apply job policies to appropriate jobs backup locations.
         /// Should NOT be called on UI thread.
         /// </summary>
         private static void applyPolicies()
         {
-            var policies = getAllPolicies();
-            compressJobs(policies);
-            handleRetentions(policies);
+            lock (_policyHandlingSyncObject)
+            {
+                var policies = getJobsBackupLocations();
+                compressJobs(policies);
+                handleRetentions(policies);
+            }
         }
 
         /// <summary>
-        /// Compress those jobs, for which compress policy flag is true.
+        /// Compress those jobs backups, for which compress policy flag is true.
         /// </summary>
-        private static void compressJobs(List<Policy> policies) 
+        private static void compressJobs(List<JobBackupLocation> jobBackupLocations) 
         {
-            string backupJobRootFolder = getBackupJobRootFolderTrailingSlash();
-            string retentionFolder = getRetentionFolderTrailingSlash();
-            foreach (var policy in policies)
+            foreach (var backupLocation in jobBackupLocations)
             {
-                if (!policy.compress)
+                if (!backupLocation.policy.compress)
                 {
                     continue;
                 }
 
-                string zipFileName = retentionFolder + policy.jobName + RETENTION_FILE_EXTENSION;
-                string jobFolder = backupJobRootFolder + policy.jobName;
-
-                try
+                string backupJobRootFolder = getBackupJobRootFolderTrailingSlash(backupLocation.backupLocation);
+                if (!isDirectoryAccessed(backupJobRootFolder))
                 {
-                    if (Directory.Exists(jobFolder) && !File.Exists(zipFileName))
+                    continue;
+                }
+                string retentionFolder = getRetentionFolderTrailingSlash(backupJobRootFolder);
+                var backupJobRootSubFolders = Directory.EnumerateDirectories(backupJobRootFolder)
+                    .Select(folder => folder.TrimEnd('\\') + "\\");
+                foreach (var timestampFolder in backupJobRootSubFolders)
+                {
+                    if (isRetentionFolder(timestampFolder))
                     {
-                        if (!Directory.Exists(retentionFolder))
+                        continue;
+                    }
+                    string timestampFolderName = Path.GetFileName(Path.GetDirectoryName(timestampFolder));
+                    string zipFilePath = retentionFolder + timestampFolderName + RETENTION_FILE_EXTENSION;
+                    
+                    try
+                    {
+                        if (Directory.Exists(timestampFolder) && !File.Exists(zipFilePath))
                         {
-                            Directory.CreateDirectory(retentionFolder);
-                        }
-                        using (var zip = new ZipFile(policy.jobName + RETENTION_FILE_EXTENSION))
-                        {
-                            zip.AddDirectory(jobFolder);
-                            zip.Save(zipFileName);
+                            if (!Directory.Exists(retentionFolder))
+                            {
+                                Directory.CreateDirectory(retentionFolder);
+                            }
+                            using (var zip = new ZipFile(timestampFolderName + RETENTION_FILE_EXTENSION))
+                            {
+                                zip.AddDirectory(timestampFolder);
+                                zip.Save(zipFilePath);
+                            }
                         }
                     }
-                }
-                catch (Exception)
-                {
-                    string error = string.Format("Cannot compress folder \"{0}\" to \"{1}\" archive. Please, check system rights for HTConsole.", jobFolder, zipFileName);
-                    //TODO some error logging
+                    catch (Exception)
+                    {
+                        string error = string.Format(
+                            "Cannot compress folder \"{0}\" to \"{1}\" archive. Please, check system rights for HTConsole.",
+                            timestampFolder, zipFilePath);
+                        Debug.Assert(false, error);
+                        //TODO some error logging
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Check retention for all jobs and delete those job folders, 
+        /// Check retention for all job's backups and delete those backup folders, 
         /// for which creation_date + policy_retention_days_count is less, than today's date.
         /// </summary>
-        private static void handleRetentions(List<Policy> policies)
+        private static void handleRetentions(List<JobBackupLocation> backupLocationWithPolicies)
         {
-            string backupJobRootFolder = getBackupJobRootFolderTrailingSlash();
-            foreach (var policy in policies)
+            foreach (var backupLocation in backupLocationWithPolicies)
             {
-                if (policy.backupRetension < 1)
+                if (backupLocation.policy.backupRetension < 1)
                 {
                     continue;
                 }
 
-                string targetFolder = backupJobRootFolder + policy.jobName;
-                try
+                string backupJobRootFolder = getBackupJobRootFolderTrailingSlash(backupLocation.backupLocation);
+                if (!isDirectoryAccessed(backupJobRootFolder))
                 {
-                    if (Directory.Exists(targetFolder))
+                    continue;
+                }
+                var backupJobRootSubFolders = Directory.EnumerateDirectories(backupJobRootFolder)
+                    .Select(folder => folder.TrimEnd('\\') + "\\");
+                foreach (var timestampFolder in backupJobRootSubFolders)
+                {
+                    if (isRetentionFolder(timestampFolder))
                     {
-                        DateTime folderCreation = Directory.GetCreationTimeUtc(targetFolder);
-                        DateTime expirationDate = folderCreation + TimeSpan.FromDays(policy.backupRetension);
-                        if (DateTime.UtcNow > expirationDate)
+                        continue;
+                    }
+
+                    try
+                    {
+                        if (Directory.Exists(timestampFolder))
                         {
-                            Directory.Delete(targetFolder, true);
+                            DateTime folderCreation = Directory.GetCreationTimeUtc(timestampFolder);
+                            DateTime expirationDate = folderCreation + TimeSpan.FromDays(backupLocation.policy.backupRetension);
+                            if (DateTime.UtcNow > expirationDate)
+                            {
+                                Directory.Delete(timestampFolder, true);
+                            }
                         }
                     }
-                }
-                catch (Exception)
-                {
-                    string error = string.Format("Cannot handle retention policy for folder \"{0}\" Please, check system rights for this program.", targetFolder);
-                    //TODO some error logging
+                    catch (Exception)
+                    {
+                        string error = string.Format(
+                            "Cannot handle retention policy for folder \"{0}\" Please, check system rights for this program.",
+                            timestampFolder);
+                        Debug.Assert(false, error);
+                        //TODO some error logging
+                    }
                 }
             }
         }
@@ -228,18 +260,43 @@ namespace HTBackupConsole
         /// <summary>
         /// Returns system path to backup job's root folder.
         /// </summary>
-        private static string getBackupJobRootFolderTrailingSlash()
+        private static string getBackupJobRootFolderTrailingSlash(string backupLocation)
         {
-            string settingsFolder = ConfigurationManager.AppSettings[BACKUPJOB_FOLDER_SETTING];
-            return settingsFolder.TrimEnd('\\') + "\\";
+            return backupLocation.TrimEnd('\\') + "\\";
         }
 
         /// <summary>
         /// Returns system path to backup job's retention folder.
         /// </summary>
-        private static string getRetentionFolderTrailingSlash()
+        private static string getRetentionFolderTrailingSlash(string backupJobLocation)
         {
-            return getBackupJobRootFolderTrailingSlash() + RETENTION_SUBFOLDER_NAME.TrimEnd('\\') + "\\";
+            return getBackupJobRootFolderTrailingSlash(backupJobLocation) + RETENTION_SUBFOLDER_NAME.TrimEnd('\\') + "\\";
+        }
+
+        private static bool isRetentionFolder(string folder)
+        {
+            string folderName = Path.GetFileName(Path.GetDirectoryName(folder));
+            return String.Equals(folderName, RETENTION_SUBFOLDER_NAME, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static bool isDirectoryAccessed(string directoryPath)
+        {
+            try
+            {
+                Directory.GetAccessControl(directoryPath);
+            }
+            catch (Exception)
+            {
+                string error = string.Format(
+                    "Some problem caused with job's root folder access: \"{0}\". " +
+                    "Policies will not handled.\n" +
+                    "Please, check folder existence and permissions for HTConsole, and try again."
+                    , directoryPath);
+                Debug.Assert(false, error);
+                //TODO some error logging
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
