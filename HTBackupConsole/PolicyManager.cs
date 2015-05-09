@@ -281,11 +281,16 @@ namespace HTBackupConsole
 
         private static bool isDirectoryAccessed(string directoryPath)
         {
+            bool isAccessed;
             try
             {
-                Directory.GetAccessControl(directoryPath);
+                isAccessed = Directory.Exists(directoryPath);
             }
             catch (Exception)
+            {
+                isAccessed = false;
+            }
+            if (!isAccessed)
             {
                 string error = string.Format(
                     "Some problem caused with job's root folder access: \"{0}\". " +
