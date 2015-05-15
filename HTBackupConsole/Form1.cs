@@ -244,8 +244,8 @@ namespace HTBackupConsole
                         }
                     }
 
-                    Thread threadGetNetworkInstances = new Thread(GetNetworkInstances);
-                    threadGetNetworkInstances.Start();
+                   // Thread threadGetNetworkInstances = new Thread(GetNetworkInstances);
+                   // threadGetNetworkInstances.Start();
                 }
 
                 // Get a list of available performance counter categories
@@ -1053,6 +1053,11 @@ namespace HTBackupConsole
                 }
             }
 
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            populatePolicyTab();
         }
     }
 }

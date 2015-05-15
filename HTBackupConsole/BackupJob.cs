@@ -202,7 +202,13 @@ namespace HTConsoleCommonUtil
 
         public void enableTaskTriggers(bool enable)
         {
-            TaskManager.enableTriggers(Server + "-" + Name, enable);
+            SecurityOptions securityOption = new SecurityOptions();
+            securityOption.RunAsUser = RunAsUser;
+            securityOption.Password = Password;
+            securityOption.HighestPrivilege = HighestPrivilege;
+            securityOption.StorePassword = StorePassword;
+
+            TaskManager.enableTriggers(Server + "-" + Name, securityOption, enable);
         }
 
         public bool isTaskEnabled()

@@ -188,7 +188,7 @@ namespace TaskManagerUtil
             }
         }
 
-        public static void enableTriggers(string taskName, bool enable)
+        public static void enableTriggers(string taskName, SecurityOptions securityOptions, bool enable)
         {
             Task task = getTask(taskName);
             if (task != null)
@@ -206,8 +206,29 @@ namespace TaskManagerUtil
                 def.Triggers.Clear();
                 def.Triggers.AddRange(newTriggerList);
 
+                if (securityOptions.HighestPrivilege)
+                {
+                    def.Principal.RunLevel = TaskRunLevel.Highest;
+                }
+                else
+                {
+                    def.Principal.RunLevel = TaskRunLevel.LUA;
+                }
+
+                TaskLogonType logonType = TaskLogonType.S4U;
+                if (securityOptions.StorePassword)
+                {
+                    logonType = TaskLogonType.Password;
+                }
+
+                string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);                
+
                 TaskFolder tf = getTaskFolder();
-                tf.RegisterTaskDefinition(taskName, def);
+
+                tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
+                          securityOptions.Password, logonType);
+
+                //tf.RegisterTaskDefinition(taskName, def);
             }
         }
 

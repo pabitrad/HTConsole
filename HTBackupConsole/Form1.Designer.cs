@@ -38,7 +38,6 @@
             this.addHTBackupServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteHTBackupServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverInstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backupSchedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.servicesControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startServicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,8 +45,6 @@
             this.stopServicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullBackupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.incrementalBackupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.informationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serviceStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewServer = new System.Windows.Forms.TreeView();
@@ -121,6 +118,7 @@
             this.tabPageCluster = new System.Windows.Forms.TabPage();
             this.backupPageCluster = new HTBackupUserControl.BackupPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.listBoxJobNames = new System.Windows.Forms.ListBox();
             this.btnSavePolicy = new System.Windows.Forms.Button();
@@ -187,7 +185,6 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.systemToolStripMenuItem,
-            this.informationToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -214,7 +211,6 @@
             // 
             this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.serverManagementToolStripMenuItem,
-            this.backupSchedulerToolStripMenuItem,
             this.servicesControlToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
@@ -251,12 +247,6 @@
             this.serverInstallToolStripMenuItem.Text = "Server Directory";
             this.serverInstallToolStripMenuItem.Click += new System.EventHandler(this.serverInstallToolStripMenuItem_Click);
             // 
-            // backupSchedulerToolStripMenuItem
-            // 
-            this.backupSchedulerToolStripMenuItem.Name = "backupSchedulerToolStripMenuItem";
-            this.backupSchedulerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.backupSchedulerToolStripMenuItem.Text = "Backup Scheduler";
-            // 
             // servicesControlToolStripMenuItem
             // 
             this.servicesControlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -272,7 +262,7 @@
             this.fullBackupToolStripMenuItem,
             this.incrementalBackupToolStripMenuItem});
             this.startServicesToolStripMenuItem.Name = "startServicesToolStripMenuItem";
-            this.startServicesToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.startServicesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.startServicesToolStripMenuItem.Text = "Start Services";
             // 
             // fullBackupToolStripMenuItem
@@ -293,7 +283,7 @@
             this.fullBackupToolStripMenuItem1,
             this.incrementalBackupToolStripMenuItem1});
             this.stopServicesToolStripMenuItem.Name = "stopServicesToolStripMenuItem";
-            this.stopServicesToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.stopServicesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.stopServicesToolStripMenuItem.Text = "Stop Services";
             // 
             // fullBackupToolStripMenuItem1
@@ -308,20 +298,6 @@
             this.incrementalBackupToolStripMenuItem1.Size = new System.Drawing.Size(179, 22);
             this.incrementalBackupToolStripMenuItem1.Text = "Incremental Backup";
             // 
-            // informationToolStripMenuItem
-            // 
-            this.informationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.serviceStatusToolStripMenuItem});
-            this.informationToolStripMenuItem.Name = "informationToolStripMenuItem";
-            this.informationToolStripMenuItem.Size = new System.Drawing.Size(82, 20);
-            this.informationToolStripMenuItem.Text = "Information";
-            // 
-            // serviceStatusToolStripMenuItem
-            // 
-            this.serviceStatusToolStripMenuItem.Name = "serviceStatusToolStripMenuItem";
-            this.serviceStatusToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.serviceStatusToolStripMenuItem.Text = "Service Status";
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -333,7 +309,7 @@
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -641,7 +617,7 @@
             this.ServerPage.Cursor = System.Windows.Forms.Cursors.Default;
             this.ServerPage.Location = new System.Drawing.Point(6, 6);
             this.ServerPage.Name = "ServerPage";
-            this.ServerPage.Size = new System.Drawing.Size(935, 388);
+            this.ServerPage.Size = new System.Drawing.Size(944, 388);
             this.ServerPage.TabIndex = 0;
             // 
             // tabPageEssbaseBackupParent
@@ -1050,11 +1026,12 @@
             this.backupPageCluster.Cursor = System.Windows.Forms.Cursors.Default;
             this.backupPageCluster.Location = new System.Drawing.Point(4, 4);
             this.backupPageCluster.Name = "backupPageCluster";
-            this.backupPageCluster.Size = new System.Drawing.Size(929, 461);
+            this.backupPageCluster.Size = new System.Drawing.Size(943, 461);
             this.backupPageCluster.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnRefresh);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.listBoxJobNames);
             this.tabPage1.Controls.Add(this.btnSavePolicy);
@@ -1071,6 +1048,16 @@
             this.tabPage1.TabIndex = 7;
             this.tabPage1.Text = "Policies";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(179, 263);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 64;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // label9
             // 
@@ -1393,7 +1380,6 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "HTBackup Management Console";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -1444,10 +1430,8 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem systemToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem informationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem versionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem backupSchedulerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem servicesControlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startServicesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fullBackupToolStripMenuItem;
@@ -1458,7 +1442,6 @@
         private System.Windows.Forms.ToolStripMenuItem serverManagementToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addHTBackupServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteHTBackupServerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem serviceStatusToolStripMenuItem;
         private System.Windows.Forms.TreeView treeViewServer;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripMenuItem serverInstallToolStripMenuItem;
@@ -1564,6 +1547,7 @@
         private System.Windows.Forms.Button btnCancelPolicy;
         private System.Windows.Forms.ListBox listBoxJobNames;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

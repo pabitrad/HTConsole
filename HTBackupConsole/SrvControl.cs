@@ -219,11 +219,20 @@ namespace HTBackupConsole
                 {
                     ListViewItem backupItem = listViewJob.SelectedItems[0];
                     string jobName = backupItem.SubItems[0].Text;
+
                     //BackupJob job = BackupJobScheduler.getJob(comboBoxServer.Text, jobName);
                     if (TaskManager.isTaskEnabled(comboBoxServer.Text + "-" + jobName.Trim()))
                     //if (job != null)
                     {
-                        TaskManager.enableTriggers(comboBoxServer.Text + "-" + jobName.Trim(), false);
+                        BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
+
+                        SecurityOptions securityOption = new SecurityOptions();
+                        securityOption.RunAsUser = job.RunAsUser;
+                        securityOption.Password = job.Password;
+                        securityOption.HighestPrivilege = job.HighestPrivilege;
+                        securityOption.StorePassword = job.StorePassword;
+
+                        TaskManager.enableTriggers(comboBoxServer.Text + "-" + jobName.Trim(), securityOption, false);
                         //job.enableTaskTriggers(false);
                         //BackupJobScheduler.removeJob(job);
                         //job.stopTimer();
