@@ -98,15 +98,21 @@ namespace HTBackupConsole
                 {
                     ListViewItem backupItem = listViewJob.SelectedItems[0];
                     string jobName = backupItem.SubItems[0].Text;
-                    //BackupJob job = BackupJobScheduler.getJob(comboBoxServer.Text, jobName);
+                    BackupJob job =  HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
 
-                    if (TaskManager.isTaskEnabled(comboBoxServer.Text + "-" + jobName.Trim()))
+                    SecurityOptions securityOption = new SecurityOptions();
+                    securityOption.RunAsUser = job.RunAsUser;
+                    securityOption.Password = job.Password;
+                    securityOption.HighestPrivilege = job.HighestPrivilege;
+                    securityOption.StorePassword = job.StorePassword;
+
+                    if (TaskManager.isTaskEnabled(comboBoxServer.Text, comboBoxServer.Text + "-" + jobName.Trim(), securityOption))
                     {
                         MessageBox.Show("The selected job is already scheduled to start.");
                     }
                     else
                     {
-                        BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
+                        //BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
                         if (job != null)
                         {
                             job.enableTaskTriggers(true);
@@ -221,18 +227,20 @@ namespace HTBackupConsole
                     string jobName = backupItem.SubItems[0].Text;
 
                     //BackupJob job = BackupJobScheduler.getJob(comboBoxServer.Text, jobName);
-                    if (TaskManager.isTaskEnabled(comboBoxServer.Text + "-" + jobName.Trim()))
+                    BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
+
+                    SecurityOptions securityOption = new SecurityOptions();
+                    securityOption.RunAsUser = job.RunAsUser;
+                    securityOption.Password = job.Password;
+                    securityOption.HighestPrivilege = job.HighestPrivilege;
+                    securityOption.StorePassword = job.StorePassword;
+
+                    if (TaskManager.isTaskEnabled(comboBoxServer.Text, comboBoxServer.Text + "-" + jobName.Trim(), securityOption))
                     //if (job != null)
                     {
-                        BackupJob job = HTConsoleHelper.getSelectedJob(comboBoxServer.Text, jobName);
 
-                        SecurityOptions securityOption = new SecurityOptions();
-                        securityOption.RunAsUser = job.RunAsUser;
-                        securityOption.Password = job.Password;
-                        securityOption.HighestPrivilege = job.HighestPrivilege;
-                        securityOption.StorePassword = job.StorePassword;
 
-                        TaskManager.enableTriggers(comboBoxServer.Text + "-" + jobName.Trim(), securityOption, false);
+                        TaskManager.enableTriggers(comboBoxServer.Text, comboBoxServer.Text + "-" + jobName.Trim(), securityOption, false);
                         //job.enableTaskTriggers(false);
                         //BackupJobScheduler.removeJob(job);
                         //job.stopTimer();

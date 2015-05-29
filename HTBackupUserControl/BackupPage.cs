@@ -386,7 +386,7 @@ namespace HTBackupUserControl
             securityOption.HighestPrivilege = job.HighestPrivilege;
             securityOption.StorePassword = job.StorePassword;
 
-            TaskManager.createTask(taskName, securityOption, triggers, actions);
+            TaskManager.createTask(_selectedServer, taskName, securityOption, triggers, actions);
         }
 
         private void modifyTask()
@@ -403,7 +403,7 @@ namespace HTBackupUserControl
             securityOption.HighestPrivilege = job.HighestPrivilege;
             securityOption.StorePassword = job.StorePassword;
 
-            TaskManager.modifyTask(taskName, securityOption, triggers, actions);
+            TaskManager.modifyTask(_selectedServer, taskName, securityOption, triggers, actions);
         }
 
         private List<Trigger> getTriggers()
@@ -611,8 +611,16 @@ namespace HTBackupUserControl
 
                         if (cmd.ExecuteNonQuery() > 0)
                         {
+                            BackupJob job = getSelectedJob();
+
+                            SecurityOptions securityOption = new SecurityOptions();
+                            securityOption.RunAsUser = job.RunAsUser;
+                            securityOption.Password = job.Password;
+                            securityOption.HighestPrivilege = job.HighestPrivilege;
+                            securityOption.StorePassword = job.StorePassword;
+
                             listBoxJobs.Items.RemoveAt(selectedIndex);
-                            TaskManager.deleteTask(_selectedServer + "-" + jobName);
+                            TaskManager.deleteTask(_selectedServer, _selectedServer + "-" + jobName, securityOption);
 
                             createBlankJob();
                         }
@@ -690,7 +698,14 @@ namespace HTBackupUserControl
         {
             listViewTriggers.Items.Clear();
             string taskName = job.Server + "-" + job.Name;
-            TriggerCollection triggers = TaskManager.getTriggers(taskName);
+
+            SecurityOptions securityOption = new SecurityOptions();
+            securityOption.RunAsUser = job.RunAsUser;
+            securityOption.Password = job.Password;
+            securityOption.HighestPrivilege = job.HighestPrivilege;
+            securityOption.StorePassword = job.StorePassword;
+
+            TriggerCollection triggers = TaskManager.getTriggers(job.Server, taskName, securityOption);
 
             if (triggers != null && triggers.Count > 0)
             {

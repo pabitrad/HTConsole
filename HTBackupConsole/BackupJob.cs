@@ -208,12 +208,18 @@ namespace HTConsoleCommonUtil
             securityOption.HighestPrivilege = HighestPrivilege;
             securityOption.StorePassword = StorePassword;
 
-            TaskManager.enableTriggers(Server + "-" + Name, securityOption, enable);
+            TaskManager.enableTriggers(Server, Server + "-" + Name, securityOption, enable);
         }
 
         public bool isTaskEnabled()
         {
-            return TaskManager.isTaskEnabled(Server + "-" + Name);
+            SecurityOptions securityOption = new SecurityOptions();
+            securityOption.RunAsUser = RunAsUser;
+            securityOption.Password = Password;
+            securityOption.HighestPrivilege = HighestPrivilege;
+            securityOption.StorePassword = StorePassword;
+
+            return TaskManager.isTaskEnabled(Server, Server + "-" + Name, securityOption);
         }
 
         //public void stopTimer()
@@ -234,7 +240,8 @@ namespace HTConsoleCommonUtil
                 case ServerBackupType.EssbaseBackup:
                     application = "Powershell";
                     string backupAppDirectory = HTConsoleHelper.getHTBackupInstallDirectory();
-                    executionCommand += "$now=Get-Date -format \"dd-MM-yyyy-HH.mm.ss\";";
+                    //executionCommand += "$now=Get-Date -format \"dd-MM-yyyy-HH.mm.ss\";";
+                    executionCommand += "$now=Get-Date -format \'dd-MM-yyyy-HH.mm.ss\';";
                     executionCommand += "mkdir " + BackupLocation + "\\" + "$now" + ";";
 
                     foreach (var sourceLocation in SourceLocations)
@@ -259,7 +266,7 @@ namespace HTConsoleCommonUtil
 
                         string backupStorage = BackupLocation + "/" + "$now";
 
-                        executionCommand += ("\"" + backupStorage + "\"");
+                        executionCommand += ("\'" + backupStorage + "\'");
                         executionCommand += "  >>  \'";
 
                         if (JobType == JOBTYPE.FULLBACKUP)

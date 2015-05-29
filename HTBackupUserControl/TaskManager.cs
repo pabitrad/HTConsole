@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Win32.TaskScheduler;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace TaskManagerUtil
 {
@@ -70,18 +71,32 @@ namespace TaskManagerUtil
 
     public class TaskManager
     {
-        static public void createTask(string taskName, SecurityOptions securityOptions,
+        static public void createTask(string machineName, string taskName, SecurityOptions securityOptions,
                                       List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
-            //using (TaskService ts = new TaskService("PABITRA-HP", "pabitra", "PABITRA-HP", "muna1969"))
-            using (TaskService ts = new TaskService())
+
+            //ProcessStartInfo startInfo = new ProcessStartInfo("SCHTASKS.EXE");
+            //startInfo.FileName = "cmd.exe";
+            //startInfo.Verb = "runas";
+
+            //Microsoft.Win32.TaskScheduler.Action action = actionList[0];
+            //string argument = @"/K SCHTASKS.EXE /create /tn " + taskName + " /tr \"" + action.ToString() + "\" /sc daily /mo 4 /s " + machineName;
+
+            //if (Environment.MachineName.ToLower() != machineName.ToLower())
+            //{
+            //   argument = argument + " /u " + securityOptions.RunAsUser + " /p " + securityOptions.Password;
+            //}
+            //startInfo.Arguments = argument;
+            //string task = "SCHTASKS.EXE";
+
+            //Process.Start(startInfo);
+
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
                 try
                 {
-                    TaskFolder tf = getTaskFolder();
+                    TaskFolder tf = getTaskFolder(ts);
                     TaskDefinition td = ts.NewTask();
-                    //td.Principal.UserId = "SYSTEM";
-                    //td.Principal.LogonType = TaskLogonType.S4U;
                     td.RegistrationInfo.Description = "Task created by HTConsole.";
                     td.Triggers.AddRange(triggerList);
                     foreach (Microsoft.Win32.TaskScheduler.Action action in actionList)
@@ -101,6 +116,7 @@ namespace TaskManagerUtil
                     string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);
                     tf.RegisterTaskDefinition(taskName, td, TaskCreation.Create, runAsUser,
                                               securityOptions.Password, logonType);
+
                 }
                 catch (Exception ex)
                 {
@@ -109,10 +125,10 @@ namespace TaskManagerUtil
             }
         }
 
-        public static TaskFolder getTaskFolder()
+        public static TaskFolder getTaskFolder(TaskService ts)
         {
             TaskFolder tf = null;
-            using (TaskService ts = new TaskService())
+            //using (TaskService ts = new TaskService())
             {
                try
                {
@@ -127,146 +143,168 @@ namespace TaskManagerUtil
             return tf;
         }
 
-        public static TriggerCollection getTriggers(string taskName)
+        public static TriggerCollection getTriggers(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            Task task = getTask(taskName);
-            if (task != null)
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
-                return task.Definition.Triggers;
+                Task task = getTask(taskName, ts);
+                if (task != null)
+                {
+                    return task.Definition.Triggers;
+                }
             }
 
             return null;
         }
 
-        public static void modifyTask(string taskName, SecurityOptions securityOptions,
+        public static void modifyTask(string machineName, string taskName, SecurityOptions securityOptions,
                                       List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
-            Task task = getTask(taskName);
-            if (task != null)
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
-                TaskDefinition def = task.Definition;
-                def.Triggers.Clear();
-                def.Triggers.AddRange(triggerList);
-
-                def.Actions.Clear();
-                foreach (Microsoft.Win32.TaskScheduler.Action action in actionList)
+                Task task = getTask(taskName, ts);
+                if (task != null)
                 {
-                    def.Actions.Add(action);
-                }
+                    TaskDefinition def = task.Definition;
+                    def.Triggers.Clear();
+                    def.Triggers.AddRange(triggerList);
 
-                if (securityOptions.HighestPrivilege)
-                {
-                    def.Principal.RunLevel = TaskRunLevel.Highest;
-                }
-                else
-                {
-                    def.Principal.RunLevel = TaskRunLevel.LUA;
-                }
+                    def.Actions.Clear();
+                    foreach (Microsoft.Win32.TaskScheduler.Action action in actionList)
+                    {
+                        def.Actions.Add(action);
+                    }
 
-                TaskLogonType logonType = TaskLogonType.S4U;
-                if (securityOptions.StorePassword)
-                {
-                    logonType = TaskLogonType.Password;
+                    if (securityOptions.HighestPrivilege)
+                    {
+                        def.Principal.RunLevel = TaskRunLevel.Highest;
+                    }
+                    else
+                    {
+                        def.Principal.RunLevel = TaskRunLevel.LUA;
+                    }
+
+                    TaskLogonType logonType = TaskLogonType.S4U;
+                    if (securityOptions.StorePassword)
+                    {
+                        logonType = TaskLogonType.Password;
+                    }
+
+                    string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);
+
+                    TaskFolder tf = getTaskFolder(ts);
+                    tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
+                                                securityOptions.Password, logonType);
+
+                    //tf.RegisterTaskDefinition(taskName, def);
                 }
-
-                string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);                
-                TaskFolder tf = getTaskFolder();                
-                tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
-                                          securityOptions.Password, logonType);
-
-                //tf.RegisterTaskDefinition(taskName, def);
             }
         }
 
-        public static void deleteTask(string taskName)
+        public static void deleteTask(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            Task task = getTask(taskName);
-            if (task != null)
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
-                TaskFolder tf = getTaskFolder();
-                tf.DeleteTask(taskName);
+                Task task = getTask(taskName, ts);
+                if (task != null)
+                {
+                    TaskFolder tf = getTaskFolder(ts);
+                    tf.DeleteTask(taskName);
+                }
             }
         }
 
-        public static void enableTriggers(string taskName, SecurityOptions securityOptions, bool enable)
+        public static void enableTriggers(string machineName, string taskName, SecurityOptions securityOptions, bool enable)
         {
-            Task task = getTask(taskName);
-            if (task != null)
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
+                Task task = getTask(taskName, ts);
+                if (task != null)
+                {
+                    TaskDefinition def = task.Definition;
+                    TriggerCollection triggers = def.Triggers;
+                    List<Trigger> newTriggerList = new List<Trigger>();
+                    foreach (Trigger trigger in triggers)
+                    {
+                        Trigger newTrigger = trigger.Clone() as Trigger;
+                        newTrigger.Enabled = enable;
+                        newTriggerList.Add(newTrigger);
+                    }
+
+                    def.Triggers.Clear();
+                    def.Triggers.AddRange(newTriggerList);
+
+                    if (securityOptions.HighestPrivilege)
+                    {
+                        def.Principal.RunLevel = TaskRunLevel.Highest;
+                    }
+                    else
+                    {
+                        def.Principal.RunLevel = TaskRunLevel.LUA;
+                    }
+
+                    TaskLogonType logonType = TaskLogonType.S4U;
+                    if (securityOptions.StorePassword)
+                    {
+                        logonType = TaskLogonType.Password;
+                    }
+
+                    string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);
+
+                    //using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+                    {
+                        TaskFolder tf = getTaskFolder(ts);
+
+                        tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
+                                  securityOptions.Password, logonType);
+                    }
+
+                    //tf.RegisterTaskDefinition(taskName, def);
+                }
+            }
+        }
+
+        public static bool isTaskEnabled(string machineName, string taskName, SecurityOptions securityOptions)
+        {
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            {
+                Task task = getTask(taskName, ts);
                 TaskDefinition def = task.Definition;
                 TriggerCollection triggers = def.Triggers;
-                List<Trigger> newTriggerList = new List<Trigger>();
                 foreach (Trigger trigger in triggers)
                 {
-                    Trigger newTrigger = trigger.Clone() as Trigger;
-                    newTrigger.Enabled = enable;
-                    newTriggerList.Add(newTrigger);
-                }
-
-                def.Triggers.Clear();
-                def.Triggers.AddRange(newTriggerList);
-
-                if (securityOptions.HighestPrivilege)
-                {
-                    def.Principal.RunLevel = TaskRunLevel.Highest;
-                }
-                else
-                {
-                    def.Principal.RunLevel = TaskRunLevel.LUA;
-                }
-
-                TaskLogonType logonType = TaskLogonType.S4U;
-                if (securityOptions.StorePassword)
-                {
-                    logonType = TaskLogonType.Password;
-                }
-
-                string runAsUser = String.Concat(Environment.UserDomainName, "\\", securityOptions.RunAsUser);                
-
-                TaskFolder tf = getTaskFolder();
-
-                tf.RegisterTaskDefinition(taskName, def, TaskCreation.Update, runAsUser,
-                          securityOptions.Password, logonType);
-
-                //tf.RegisterTaskDefinition(taskName, def);
-            }
-        }
-
-        public static bool isTaskEnabled(string taskName)
-        {
-            Task task = getTask(taskName);
-            TaskDefinition def = task.Definition;
-            TriggerCollection triggers = def.Triggers;
-            foreach (Trigger trigger in triggers)
-            {
-                if (trigger.Enabled == false)
-                {
-                    return false;
+                    if (trigger.Enabled == false)
+                    {
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        public static bool isTaskDisabled(string taskName)
+        public static bool isTaskDisabled(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            Task task = getTask(taskName);
-            TaskDefinition def = task.Definition;
-            TriggerCollection triggers = def.Triggers;
-            foreach (Trigger trigger in triggers)
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
             {
-                if (trigger.Enabled == true)
+                Task task = getTask(taskName, ts);
+                TaskDefinition def = task.Definition;
+                TriggerCollection triggers = def.Triggers;
+                foreach (Trigger trigger in triggers)
                 {
-                    return false;
+                    if (trigger.Enabled == true)
+                    {
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        private static Task getTask(string taskName)
+        private static Task getTask(string taskName, TaskService ts)
         {
-            TaskFolder tf = getTaskFolder();
+            TaskFolder tf = getTaskFolder(ts);
 
             Regex filter = new Regex(taskName);
             TaskCollection collection = tf.GetTasks(filter);
