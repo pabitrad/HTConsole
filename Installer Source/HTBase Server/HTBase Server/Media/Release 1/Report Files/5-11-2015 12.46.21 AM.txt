@@ -1,0 +1,385 @@
+//////////////////////////////////////////////////////////////////////
+/////////////////////////////// Summary //////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+		Features:  			        19
+		Components:			        20
+		Number of Files:		        60
+		Size of Files:   		      16332147
+		Size in Library:		       4585432
+
+
+		<Support>
+			Engine
+				Log
+				Kernel
+			Main Installation
+				Script
+				Setup
+				StrTbl
+				RunTime
+				Resource
+		<Data>
+			Disk<1>
+			HTBase
+				HTConsole+HTBackup
+					HTConsole
+					HTBackup
+				HTConsole+HTCluster
+					HTConsole
+					HTCluster
+
+
+//////////////////////////////////////////////////////////////////////
+///////////////////////////// Features ///////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+*<Support>*
+
+		Component
+		------------------------------------------------------
+
+*<Support>\Engine*
+
+		Component
+		------------------------------------------------------
+
+*<Support>\Engine\Log*
+
+		Component
+		------------------------------------------------------
+
+*<Support>\Engine\Kernel*
+
+		Component
+		------------------------------------------------------
+		"<Engine>Kernel Placeholder"
+		"<Engine>EngineCommonPlaceHolderSelfReg"
+
+*<Support>\Main Installation*
+
+		Component
+		------------------------------------------------------
+
+*<Support>\Main Installation\Script*
+
+		Component
+		------------------------------------------------------
+		"<Support>Script"
+
+*<Support>\Main Installation\Setup*
+
+		Component
+		------------------------------------------------------
+		"<Support>Language Independent OS Independent Files"
+		"<Support>0x0409 OS Independent Files"
+		"<Support>Build Generated Support Files"
+		"<Support>Misc Support Files"
+		"<Support>Misc i64 Support Files"
+		"<Support>Misc x64 Support Files"
+
+*<Support>\Main Installation\StrTbl*
+
+		Component
+		------------------------------------------------------
+		"<Support>0x0409 String Tables"
+
+*<Support>\Main Installation\RunTime*
+
+		Component
+		------------------------------------------------------
+		"<Support>Non-SelfRegistering"
+
+*<Support>\Main Installation\Resource*
+
+		Component
+		------------------------------------------------------
+		"<Support>0x0409 Files"
+
+*<Data>*
+
+		Component
+		------------------------------------------------------
+
+*<Data>\Disk<1>*
+
+		Component
+		------------------------------------------------------
+		"<Disk1>Disk1 Files(1)"
+		"<Disk1>Disk1 Files(2)"
+		"<Disk1>Disk1 Files(3)"
+		"<Disk1>Disk1 Files(4)"
+
+*<Data>\HTBase*
+
+		Component
+		------------------------------------------------------
+
+*<Data>\HTBase\HTConsole+HTBackup*
+
+		Component
+		------------------------------------------------------
+
+*<Data>\HTBase\HTConsole+HTBackup\HTConsole*
+
+		Component
+		------------------------------------------------------
+		"HTConsole"
+
+*<Data>\HTBase\HTConsole+HTBackup\HTBackup*
+
+		Component
+		------------------------------------------------------
+		"HTBackup"
+
+*<Data>\HTBase\HTConsole+HTCluster*
+
+		Component
+		------------------------------------------------------
+
+*<Data>\HTBase\HTConsole+HTCluster\HTConsole*
+
+		Component
+		------------------------------------------------------
+		"HTConsole1"
+
+*<Data>\HTBase\HTConsole+HTCluster\HTCluster*
+
+		Component
+		------------------------------------------------------
+		"HTCluster"
+
+
+//////////////////////////////////////////////////////////////////////
+///////////////////////////// Components ////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+><Engine>Kernel Placeholder<
+
+		Size of Files:   		             0
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+
+><Engine>EngineCommonPlaceHolderSelfReg<
+
+		Size of Files:   		             0
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+
+><Support>Script<
+
+		Size of Files:   		        236652
+		Size in Library:		        236652
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"setup.inx"                                             05/11/2015  12:46:18 AM       236652  ""                 "A"           "85f0a5eec71f0e5580ea545703180927"      "c:\installshield 2010 projects\htbase server\script files\setup.inx"
+
+><Support>Language Independent OS Independent Files<
+
+		Size of Files:   		          2652
+		Size in Library:		          1091
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"license.rtf"                                           05/10/2015  06:29:14 PM         2652  ""                 "A"           "951fa4bb1436fab3a9e19317c66db2d3"      "c:\installshield 2010 projects\htbase server\htbase\license.rtf"
+
+><Support>0x0409 OS Independent Files<
+
+		Size of Files:   		             0
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+
+><Support>Build Generated Support Files<
+
+		Size of Files:   		           125
+		Size in Library:		            99
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"fontdata.ini"                                          05/11/2015  12:46:18 AM           39  ""                 "A"           "00f313e3e007599349a0c4d81c7807c4"      "c:\docume~1\admini~1\locals~1\temp\fontdata.ini"
+		"difxdata.ini"                                          05/11/2015  12:46:18 AM           86  ""                 "A"           "10baa5b67536f4433f37534b9c8bb828"      "c:\docume~1\admini~1\locals~1\temp\difxdata.ini"
+
+><Support>Misc Support Files<
+
+		Size of Files:   		         76583
+		Size in Library:		         17909
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"corecomp.ini"                                          03/07/2006  11:25:04 AM        65503  ""                 "A"           "09d38ceca6a012f4ce5b54f03db9b21a"      "c:\program files\installshield\2010\redist\language independent\i386\corecomp.ini"
+		"dotnetinstaller.exe"                                   06/11/2009  02:27:52 AM        11080  "16.0.0.328"       "A"           "94b6f434210bfad6abdcf818b8cf350f"      "c:\program files\installshield\2010\redist\language independent\i386\dotnetinstaller.exe"
+
+><Support>Misc i64 Support Files<
+
+		Size of Files:   		        239416
+		Size in Library:		        103979
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"isbew64.exe"                                           06/11/2009  02:29:18 AM       239416  "16.0.0.328"       "A"           "38eb6c08e3e7e385255119c8c732fa99"      "c:\program files\installshield\2010\redist\language independent\i64\isbew64.exe"
+
+><Support>Misc x64 Support Files<
+
+		Size of Files:   		        107320
+		Size in Library:		         52026
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"isbew64.exe"                                           06/11/2009  02:29:18 AM       107320  "16.0.0.328"       "A"           "41cb698f967b4d9f2580ea2a21a5a710"      "c:\program files\installshield\2010\redist\language independent\x64\isbew64.exe"
+
+><Support>0x0409 String Tables<
+
+		Size of Files:   		          1896
+		Size in Library:		           523
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"stringtable_0x0409.ips"                                05/11/2015  12:46:18 AM         1896  ""                 "A"           "bac43b622618dac3e3812ab5ae247ee1"      "c:\installshield 2010 projects\htbase server\string tables\stringtable_0x0409.ips"
+
+><Support>Non-SelfRegistering<
+
+		Size of Files:   		        262592
+		Size in Library:		        253564
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"isrt.dll"                                              11/03/2009  12:51:42 PM       261424  "16.0.0.432"       "A"           "0ec6b3d99d56f9fb9078b24d3b5ec4eb"      "c:\program files\installshield\2010\redist\language independent\i386\isrt.dll"
+		"default.pal"                                           03/07/2006  11:25:02 AM         1168  ""                 "A"           "0abafe3f69d053494405061de2629c82"      "c:\program files\installshield\2010\redist\language independent\i386\default.pal"
+
+><Support>0x0409 Files<
+
+		Size of Files:   		        565355
+		Size in Library:		        119533
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"_isuser_0x0409.dll"                                    05/11/2015  12:46:18 AM        12288  ""                 "A"           "ffa86511090cc3df54e1b91ba7cf37da"      "c:\installshield 2010 projects\htbase server\_isuser_0x0409.dll"
+		"_isres_0x0409.dll"                                     06/11/2009  02:46:34 AM       553067  "16.0.0.328"       "A"           "8938d3d18b09e92eeb9c403593365eb0"      "c:\program files\installshield\2010\redist\language independent\i386\_isres_0x0409.dll"
+
+><Disk1>Disk1 Files(1)<
+
+		Size of Files:   		             0
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"layout.bin"                                            11/28/2004  10:02:10 PM            0  ""                 "A"           "d41d8cd98f00b204e9800998ecf8427e"      "c:\program files\installshield\2010\support\build\layout.bin"
+		"data1.hdr"                                             11/28/2004  10:02:10 PM            0  ""                 "A"           "d41d8cd98f00b204e9800998ecf8427e"      "c:\program files\installshield\2010\support\build\data1.hdr"
+		"data1.cab"                                             11/28/2004  10:02:10 PM            0  ""                 "A"           "d41d8cd98f00b204e9800998ecf8427e"      "c:\program files\installshield\2010\support\build\data1.cab"
+
+><Disk1>Disk1 Files(2)<
+
+		Size of Files:   		       1407844
+		Size in Library:		       1407844
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"setup.exe"                                             05/11/2015  12:46:18 AM       805376  "16.0.0.435"       "A"           "3f49ccb07dd991746fbc6efb32d26cfd"      "c:\installshield 2010 projects\htbase server\media\release 1\disk images\disk1\setup.exe"
+		"issetup.dll"                                           01/05/2010  01:36:28 AM       580096  "16.0.0.436"       ""            "dcde5a9372757a2739e811221066f0ad"      "c:\installshield 2010 projects\htbase server\media\release 1\disk images\disk1\issetup.dll"
+		"0x0409.ini"                                            01/09/2010  05:21:18 AM        22372  ""                 "A"           "554aae16acc564b63af8549188334ccd"      "c:\installshield 2010 projects\htbase server\media\release 1\disk images\disk1\0x0409.ini"
+
+><Disk1>Disk1 Files(3)<
+
+		Size of Files:   		        236652
+		Size in Library:		        236652
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"setup.inx"                                             05/11/2015  12:46:18 AM       236652  ""                 "A"           "85f0a5eec71f0e5580ea545703180927"      "c:\installshield 2010 projects\htbase server\script files\setup.inx"
+
+><Disk1>Disk1 Files(4)<
+
+		Size of Files:   		          1201
+		Size in Library:		          1201
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"setup.ini"                                             05/11/2015  12:46:18 AM         1201  ""                 "A"           "595eecf7067a3d7e1deb8e7ef11026f8"      "c:\installshield 2010 projects\htbase server\media\release 1\disk images\disk1\setup.ini"
+
+>HTConsole<
+
+		Size of Files:   		       5532682
+		Size in Library:		       1843234
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"htbackupconsole.exe"                                   05/10/2015  05:37:40 PM      1936384  "1.0.0.0"          "A"           "73f511250dbe1ae44599438899a81962"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.exe"
+		"htbackupconsole.exe.config"                            05/09/2015  04:25:24 PM         1249  ""                 "A"           "d4ca009029383b088f2c001cd2d89e61"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.exe.config"
+		"htbackupconsole.vshost.exe.manifest"                   04/15/2015  11:02:58 AM         2861  ""                 "A"           "32980a7fa1f1de4203b7f26fcb7ddb5e"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.vshost.exe.manifest"
+		"htbackupusercontrol.dll"                               05/10/2015  05:17:54 PM        45056  "1.0.0.0"          "A"           "130f4385c4465ff52d5a6e04b11fbde1"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupusercontrol.dll"
+		"htconsole.sdf"                                         05/10/2015  07:32:08 PM       151552  ""                 "A"           "09729a13d24b35743cf9753ac25b72a9"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htconsole.sdf"
+		"ionic.zip.dll"                                         05/09/2015  11:50:24 AM       462848  "1.9.3.0"          "A"           "c7ae289c6c0d17aa8338328d6f7133bc"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\ionic.zip.dll"
+		"ionic.zip.xml"                                         05/09/2015  11:50:24 AM       910128  ""                 "A"           "665abc9fc45ecc1e890350c5a9c88387"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\ionic.zip.xml"
+		"microsoft.win32.taskscheduler.dll"                     10/15/2014  10:47:50 PM       236544  "2.2.2.0"          "A"           "92d406c4ac54640495d9334eb961e209"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskscheduler.dll"
+		"microsoft.win32.taskscheduler.xml"                     09/10/2014  02:50:16 PM       335052  ""                 "A"           "018ed1c14f8ddc6c6f6dce0532c99459"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskscheduler.xml"
+		"microsoft.win32.taskschedulereditor.dll"               10/15/2014  10:52:50 PM      1402368  "2.2.2.0"          "A"           "72bfb62ca366af43b745ebb368c29c0a"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskschedulereditor.dll"
+		"timespan2.dll"                                         10/15/2014  10:47:52 PM        48640  "2.0.4.0"          "A"           "cf305935232bd7e62a239da9167761c8"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\timespan2.dll"
+
+>HTBackup<
+
+		Size of Files:   		       1099239
+		Size in Library:		        306135
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"cscheduler.exe"                                        02/16/2012  09:48:06 AM        70656  "1.0.0.0"          "A"           "d8e85c8a064837851f4cba84c73aff62"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\cscheduler.exe"
+		"htbase services.exe"                                   02/16/2012  09:49:28 AM         6656  "1.0.0.0"          "A"           "00097058a6d9416fdc8042f346a85cef"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbase services.exe"
+		"htbase services.exe.config"                            02/16/2012  09:49:28 AM          117  ""                 "A"           "d0089718b62f6e9d91154acae007699c"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbase services.exe.config"
+		"htbase services.installstate"                          07/09/2014  08:51:30 AM         2597  ""                 "A"           "8340e57c6861aa09b7ac38e04ee8e33d"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbase services.installstate"
+		"htbase.exe"                                            07/04/2014  08:13:24 AM      1017856  ""                 "A"           "202e6f2dfb1d5888b78e40a7407bda9b"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbase.exe"
+		"htbasefullproperties.bat"                              05/10/2015  11:42:52 PM          677  ""                 "A"           "3835cd9d740cb5735db76e9f7b91d386"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbasefullproperties.bat"
+		"htbaseincproperties.bat"                               02/16/2012  09:49:28 AM          680  ""                 "A"           "15cc8fea60e02686fb9af4f504c67846"      "c:\installshield 2010 projects\htbase server\htbase\htbackup\htbaseincproperties.bat"
+
+>HTConsole1<
+
+		Size of Files:   		       5532682
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"htbackupconsole.exe"                                   05/10/2015  05:37:40 PM      1936384  "1.0.0.0"          "A"           "73f511250dbe1ae44599438899a81962"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.exe"
+		"htbackupconsole.exe.config"                            05/09/2015  04:25:24 PM         1249  ""                 "A"           "d4ca009029383b088f2c001cd2d89e61"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.exe.config"
+		"htbackupconsole.vshost.exe.manifest"                   04/15/2015  11:02:58 AM         2861  ""                 "A"           "32980a7fa1f1de4203b7f26fcb7ddb5e"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupconsole.vshost.exe.manifest"
+		"htbackupusercontrol.dll"                               05/10/2015  05:17:54 PM        45056  "1.0.0.0"          "A"           "130f4385c4465ff52d5a6e04b11fbde1"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htbackupusercontrol.dll"
+		"htconsole.sdf"                                         05/10/2015  07:32:08 PM       151552  ""                 "A"           "09729a13d24b35743cf9753ac25b72a9"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\htconsole.sdf"
+		"ionic.zip.dll"                                         05/09/2015  11:50:24 AM       462848  "1.9.3.0"          "A"           "c7ae289c6c0d17aa8338328d6f7133bc"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\ionic.zip.dll"
+		"ionic.zip.xml"                                         05/09/2015  11:50:24 AM       910128  ""                 "A"           "665abc9fc45ecc1e890350c5a9c88387"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\ionic.zip.xml"
+		"microsoft.win32.taskscheduler.dll"                     10/15/2014  10:47:50 PM       236544  "2.2.2.0"          "A"           "92d406c4ac54640495d9334eb961e209"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskscheduler.dll"
+		"microsoft.win32.taskscheduler.xml"                     09/10/2014  02:50:16 PM       335052  ""                 "A"           "018ed1c14f8ddc6c6f6dce0532c99459"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskscheduler.xml"
+		"microsoft.win32.taskschedulereditor.dll"               10/15/2014  10:52:50 PM      1402368  "2.2.2.0"          "A"           "72bfb62ca366af43b745ebb368c29c0a"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\microsoft.win32.taskschedulereditor.dll"
+		"timespan2.dll"                                         10/15/2014  10:47:52 PM        48640  "2.0.4.0"          "A"           "cf305935232bd7e62a239da9167761c8"      "c:\installshield 2010 projects\htbase server\htbase\htconsole\timespan2.dll"
+
+>HTCluster<
+
+		Size of Files:   		       1029256
+		Size in Library:		          4990
+
+
+		File                                                    Date        Time         Size         Version            Attributes    MD5                                     Source file
+		------------------------------------------------------  ----------  -----------  -----------  -----------------  ------------  --------------------------------------  ------------------------------------------------
+		"htcluster.exe"                                         07/04/2014  08:13:24 AM      1017856  ""                 "A"           "202e6f2dfb1d5888b78e40a7407bda9b"      "c:\installshield 2010 projects\htbase server\htbase\htcluster\htcluster.exe"
+		"htclusterfullproperties.bat"                           05/10/2015  10:14:14 PM          567  ""                 "A"           "31e8efc3b094cf9db5ee0f6a7aa4fade"      "c:\installshield 2010 projects\htbase server\htbase\htcluster\htclusterfullproperties.bat"
+		"htclusterincproperties.bat"                            05/10/2015  10:15:20 PM          593  ""                 "A"           "761dfe8e9e28957042d2a95358536525"      "c:\installshield 2010 projects\htbase server\htbase\htcluster\htclusterincproperties.bat"
+		"bin\failover.exe"                                      07/18/2014  09:50:42 AM         5120  "1.0.0.0"          "A"           "5cc8a6bb667c0aa018ac91eb01396504"      "c:\installshield 2010 projects\htbase server\htbase\htcluster\bin\failover.exe"
+		"bin\fallback.exe"                                      07/18/2014  09:53:08 AM         5120  "1.0.0.0"          "A"           "ee4a102c4217c8e05de4e43b92300fab"      "c:\installshield 2010 projects\htbase server\htbase\htcluster\bin\fallback.exe"

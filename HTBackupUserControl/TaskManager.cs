@@ -90,8 +90,7 @@ namespace TaskManagerUtil
             //string task = "SCHTASKS.EXE";
 
             //Process.Start(startInfo);
-
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 try
                 {
@@ -145,7 +144,7 @@ namespace TaskManagerUtil
 
         public static TriggerCollection getTriggers(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 if (task != null)
@@ -160,7 +159,7 @@ namespace TaskManagerUtil
         public static void modifyTask(string machineName, string taskName, SecurityOptions securityOptions,
                                       List<Trigger> triggerList, List<Microsoft.Win32.TaskScheduler.Action> actionList)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 if (task != null)
@@ -203,7 +202,7 @@ namespace TaskManagerUtil
 
         public static void deleteTask(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 if (task != null)
@@ -216,7 +215,7 @@ namespace TaskManagerUtil
 
         public static void enableTriggers(string machineName, string taskName, SecurityOptions securityOptions, bool enable)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 if (task != null)
@@ -266,7 +265,7 @@ namespace TaskManagerUtil
 
         public static bool isTaskEnabled(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 TaskDefinition def = task.Definition;
@@ -285,7 +284,7 @@ namespace TaskManagerUtil
 
         public static bool isTaskDisabled(string machineName, string taskName, SecurityOptions securityOptions)
         {
-            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, machineName, securityOptions.Password))
+            using (TaskService ts = new TaskService(machineName, securityOptions.RunAsUser, Environment.UserDomainName, securityOptions.Password))
             {
                 Task task = getTask(taskName, ts);
                 TaskDefinition def = task.Definition;

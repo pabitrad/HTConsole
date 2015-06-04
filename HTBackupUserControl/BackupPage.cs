@@ -821,26 +821,41 @@ namespace HTBackupUserControl
         private bool isAuthenticate()
         {
             bool authenticate = false;
+
+            string userName = txtRunAsUser.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
             try
             {
+                //using (var domainContext = new PrincipalContext(ContextType.Domain, _selectedServer)) // Check authentication in case of active directory
+                //{
+                //    authenticate = domainContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                //    if (authenticate == false)
+                //    {
+                //        using (var machineContext = new PrincipalContext(ContextType.Machine, _selectedServer)) // Check machine authentication
+                //        {
+                //            authenticate = machineContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                //        }
+                //    }
+                //}
 
-                using (var domainContext = new PrincipalContext(ContextType.Domain, _selectedServer)) // Check authentication in case of active directory
+                using (var domainContext = new PrincipalContext(ContextType.Domain, Environment.UserDomainName))
                 {
-                    authenticate = domainContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                    authenticate = domainContext.ValidateCredentials(userName, password);
                     if (authenticate == false)
                     {
-                        using (var machineContext = new PrincipalContext(ContextType.Machine, _selectedServer)) // Check machine authentication
+                        using (var machineContext = new PrincipalContext(ContextType.Machine))
                         {
-                            authenticate = machineContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                            authenticate = machineContext.ValidateCredentials(userName, password);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                using (var machineContext = new PrincipalContext(ContextType.Machine, _selectedServer))
+                using (var machineContext = new PrincipalContext(ContextType.Machine))
                 {
-                    authenticate = machineContext.ValidateCredentials(txtRunAsUser.Text.Trim(), txtPassword.Text.Trim());
+                    authenticate = machineContext.ValidateCredentials(userName, password);
                 }
             }
 
